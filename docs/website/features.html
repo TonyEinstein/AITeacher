@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="AI Teacher 功能详解：数字人自动授课、实时课堂互动、AI 作业批改、个性化学情辅导、家长实时看课、全维度评估报告。覆盖课堂与课后全流程。">
+<title>功能介绍 · AI Teacher 智能教学引擎</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='40' fill='%238b2e2e'/><text x='50' y='62' text-anchor='middle' fill='white' font-size='38'>师</text></svg>">
+<link href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Noto+Sans+SC:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#eef1f4;--bg-2:#e4e9ed;--ink:#2b2b2b;--ink-soft:#4a4a4a;--muted:#7a8a96;
+    --cinnabar:#8b2e2e;--cinnabar-deep:#6e2222;--jade:#4a6b5a;--line:rgba(43,43,43,0.08);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{font-family:'Noto Serif SC','Songti SC',serif;color:var(--ink);line-height:1.8;overflow-x:hidden;background:linear-gradient(180deg,#eef1f4 0%,#e8edf0 50%,#eef1f4 100%);-webkit-font-smoothing:antialiased;}
+  body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:2;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");}
+  #inkCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:1;pointer-events:none;}
+  .wrap{position:relative;z-index:3;}
+
+  .nav{position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:100;display:flex;align-items:center;gap:36px;padding:14px 32px;border-radius:999px;background:rgba(238,241,244,0.75);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--line);box-shadow:0 8px 32px rgba(43,43,43,0.06);transition:all .5s cubic-bezier(0.32,0.72,0,1);}
+  .nav.scrolled{top:12px;padding:10px 28px;}
+  .nav-logo{font-size:18px;font-weight:700;letter-spacing:4px;}
+  .nav-logo a{color:var(--ink);text-decoration:none;}
+  .nav-links{display:flex;gap:28px;font-size:13px;font-family:'Noto Sans SC',sans-serif;}
+  .nav-links a{color:var(--ink-soft);text-decoration:none;letter-spacing:1px;transition:color .3s;}
+  .nav-links a:hover,.nav-links a.active{color:var(--cinnabar);}
+  .nav-cta{background:var(--cinnabar);color:#fff !important;padding:8px 20px;border-radius:999px;font-size:13px;transition:all .3s;}
+  .nav-cta:hover{background:var(--cinnabar-deep);}
+
+  .hero{min-height:80vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:160px 24px 80px;}
+  .eyebrow{display:inline-block;padding:6px 18px;border-radius:999px;border:1px solid var(--line);font-size:11px;letter-spacing:6px;color:var(--muted);margin-bottom:32px;font-family:'Noto Sans SC',sans-serif;}
+  .hero h1{font-size:clamp(40px,6vw,72px);line-height:1.25;font-weight:900;letter-spacing:6px;margin-bottom:24px;}
+  .hero h1 .accent{color:var(--cinnabar);}
+  .hero p{font-size:clamp(15px,1.4vw,18px);color:var(--ink-soft);max-width:640px;margin:0 auto;line-height:2;}
+  .brush-line{width:100px;height:3px;background:var(--cinnabar);margin:36px auto 0;position:relative;}
+  .brush-line::after{content:'';position:absolute;right:-8px;top:-3px;width:9px;height:9px;border-radius:50%;background:var(--cinnabar);}
+
+  section{padding:100px 32px;}
+  .inner{max-width:1200px;margin:0 auto;}
+  .section-head{text-align:center;margin-bottom:72px;}
+  .section-head .eyebrow{margin-bottom:16px;}
+  h2{font-size:clamp(30px,4vw,48px);letter-spacing:6px;line-height:1.25;font-weight:700;}
+  .section-sub{color:var(--muted);font-size:15px;margin-top:14px;letter-spacing:2px;font-family:'Noto Sans SC',sans-serif;}
+
+  .reveal{opacity:0;transform:translateY(40px);filter:blur(6px);transition:opacity 1s cubic-bezier(0.32,0.72,0,1),transform 1s cubic-bezier(0.32,0.72,0,1),filter 1s cubic-bezier(0.32,0.72,0,1);}
+  .reveal.visible{opacity:1;transform:translateY(0);filter:blur(0);}
+
+  /* 痛点分栏 */
+  .pain-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:24px;}
+  .pain-card{background:#fff;border-radius:24px;padding:36px 28px;position:relative;overflow:hidden;transition:all .5s cubic-bezier(0.32,0.72,0,1);border:1px solid var(--line);}
+  .pain-card:hover{transform:translateY(-6px);box-shadow:0 20px 48px rgba(43,43,43,0.1);}
+  .pain-card .num{font-size:48px;font-weight:900;color:var(--cinnabar);opacity:0.15;position:absolute;top:16px;right:24px;font-family:'Noto Sans SC',sans-serif;}
+  .pain-card .icon{width:52px;height:52px;border-radius:16px;display:flex;align-items:center;justify-content:center;margin-bottom:20px;color:#fff;font-size:22px;}
+  .pain-card h3{font-size:20px;margin-bottom:12px;letter-spacing:2px;}
+  .pain-card p{font-size:14px;color:var(--ink-soft);line-height:1.9;font-family:'Noto Sans SC',sans-serif;}
+  .pain-card .tag{display:inline-block;margin-top:16px;padding:4px 14px;border-radius:999px;font-size:12px;background:rgba(139,46,46,0.06);color:var(--cinnabar);font-family:'Noto Sans SC',sans-serif;}
+
+  /* 功能详情 - 左右交错 */
+  .feature-row{display:grid;grid-template-columns:1fr 1fr;gap:64px;align-items:center;margin-bottom:100px;}
+  .feature-row:last-child{margin-bottom:0;}
+  .feature-row.reverse .feature-text{order:2;}
+  .feature-row.reverse .feature-visual{order:1;}
+  .feature-text .tag{display:inline-block;padding:5px 16px;border-radius:999px;background:rgba(74,107,90,0.08);color:var(--jade);font-size:12px;letter-spacing:3px;margin-bottom:20px;font-family:'Noto Sans SC',sans-serif;}
+  .feature-text h3{font-size:clamp(24px,3vw,36px);letter-spacing:3px;margin-bottom:20px;line-height:1.3;}
+  .feature-text p{font-size:15px;color:var(--ink-soft);line-height:2;margin-bottom:16px;font-family:'Noto Sans SC',sans-serif;}
+  .feature-list{list-style:none;margin-top:20px;}
+  .feature-list li{padding:10px 0 10px 28px;position:relative;font-size:14px;color:var(--ink-soft);font-family:'Noto Sans SC',sans-serif;border-bottom:1px solid var(--line);}
+  .feature-list li::before{content:'';position:absolute;left:0;top:18px;width:14px;height:2px;background:var(--cinnabar);}
+  .feature-list li::after{content:'';position:absolute;left:12px;top:15px;width:6px;height:6px;border-radius:50%;background:var(--cinnabar);}
+
+  /* 功能可视化卡片 */
+  .feature-visual{position:relative;}
+  .visual-card{background:#fff;border-radius:24px;padding:32px;box-shadow:0 16px 48px rgba(43,43,43,0.08);border:1px solid var(--line);position:relative;overflow:hidden;}
+  .visual-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--cinnabar),var(--jade));}
+  .visual-title{font-size:14px;color:var(--muted);letter-spacing:2px;margin-bottom:20px;font-family:'Noto Sans SC',sans-serif;}
+  .visual-body{min-height:200px;display:flex;flex-direction:column;justify-content:center;}
+
+  /* 数字人课堂模拟 */
+  .classroom-mock{display:grid;grid-template-columns:2fr 1fr;gap:16px;}
+  .mock-screen{background:linear-gradient(135deg,#1a2a3a,#2a3a4a);border-radius:12px;padding:20px;min-height:180px;display:flex;flex-direction:column;justify-content:space-between;position:relative;overflow:hidden;}
+  .mock-screen::after{content:'';position:absolute;inset:0;background:radial-gradient(circle at 30% 40%,rgba(139,46,46,0.15),transparent 60%);}
+  .mock-board{color:rgba(255,255,255,0.9);font-size:13px;letter-spacing:1px;position:relative;z-index:1;}
+  .mock-board .line{height:2px;background:rgba(255,255,255,0.2);margin:8px 0;border-radius:1px;}
+  .mock-board .line.short{width:60%;}
+  .mock-avatar{width:60px;height:60px;border-radius:50%;background:linear-gradient(135deg,#8b2e2e,#b85555);margin:0 auto;position:relative;z-index:1;animation:bounce 2s infinite;}
+  @keyframes bounce{0%,100%{transform:translateY(0);}50%{transform:translateY(-4px);}}
+  .mock-side{display:flex;flex-direction:column;gap:8px;}
+  .mock-student{background:rgba(74,107,90,0.1);border-radius:8px;padding:8px 12px;font-size:11px;color:var(--jade);font-family:'Noto Sans SC',sans-serif;display:flex;align-items:center;gap:6px;}
+  .mock-student .dot{width:6px;height:6px;border-radius:50%;background:var(--jade);}
+  .mock-student.alert{background:rgba(139,46,46,0.1);color:var(--cinnabar);}
+  .mock-student.alert .dot{background:var(--cinnabar);animation:blink 1s infinite;}
+  @keyframes blink{50%{opacity:0.3;}}
+
+  /* 数据面板模拟 */
+  .data-mock{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+  .data-stat{background:linear-gradient(135deg,rgba(139,46,46,0.05),rgba(74,107,90,0.05));border-radius:12px;padding:16px;text-align:center;}
+  .data-stat .val{font-size:28px;font-weight:900;color:var(--cinnabar);font-family:'Noto Sans SC',sans-serif;}
+  .data-stat .label{font-size:11px;color:var(--muted);margin-top:4px;font-family:'Noto Sans SC',sans-serif;}
+  .data-chart{margin-top:16px;height:80px;display:flex;align-items:flex-end;gap:6px;}
+  .data-chart .bar{flex:1;background:linear-gradient(180deg,var(--cinnabar),var(--jade));border-radius:4px 4px 0 0;opacity:0.7;transition:all .3s;}
+  .data-chart .bar:hover{opacity:1;}
+
+  /* 作业批改模拟 */
+  .homework-mock{font-family:'Noto Sans SC',sans-serif;}
+  .hw-item{display:flex;align-items:center;gap:12px;padding:10px 0;border-bottom:1px solid var(--line);}
+  .hw-item:last-child{border-bottom:none;}
+  .hw-check{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;color:#fff;flex-shrink:0;}
+  .hw-check.correct{background:var(--jade);}
+  .hw-check.wrong{background:var(--cinnabar);}
+  .hw-text{flex:1;font-size:13px;color:var(--ink-soft);}
+  .hw-score{font-size:14px;font-weight:700;color:var(--cinnabar);}
+
+  /* 八宫格功能总览 */
+  .overview-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:20px;}
+  .overview-item{background:#fff;border-radius:20px;padding:28px 24px;border:1px solid var(--line);transition:all .4s;cursor:default;position:relative;overflow:hidden;}
+  .overview-item:hover{transform:translateY(-4px);box-shadow:0 12px 36px rgba(43,43,43,0.08);border-color:var(--cinnabar);}
+  .overview-item .glyph{font-size:32px;margin-bottom:14px;color:var(--cinnabar);}
+  .overview-item h4{font-size:17px;margin-bottom:8px;letter-spacing:1px;}
+  .overview-item p{font-size:13px;color:var(--muted);line-height:1.8;font-family:'Noto Sans SC',sans-serif;}
+
+  /* CTA */
+  .cta-section{text-align:center;padding:120px 32px;}
+  .cta-section h2{margin-bottom:20px;}
+  .cta-section p{color:var(--ink-soft);font-size:16px;max-width:560px;margin:0 auto 40px;line-height:2;}
+  .btn{display:inline-flex;align-items:center;gap:10px;padding:16px 40px;border-radius:999px;font-size:14px;letter-spacing:3px;cursor:pointer;text-decoration:none;transition:all .5s cubic-bezier(0.32,0.72,0,1);font-family:'Noto Sans SC',sans-serif;}
+  .btn-primary{background:var(--cinnabar);color:#fff;}
+  .btn-primary:hover{background:var(--cinnabar-deep);transform:translateY(-2px);box-shadow:0 12px 32px rgba(139,46,46,0.25);}
+
+  footer{padding:48px 32px;text-align:center;border-top:1px solid var(--line);font-family:'Noto Sans SC',sans-serif;}
+  footer p{color:var(--muted);font-size:13px;letter-spacing:1px;}
+  footer a{color:var(--ink-soft);text-decoration:none;margin:0 12px;font-size:13px;}
+  footer a:hover{color:var(--cinnabar);}
+
+  @media(max-width:768px){
+    .nav{gap:16px;padding:10px 20px;}
+    .nav-links{display:none;}
+    .feature-row{grid-template-columns:1fr;gap:32px;}
+    .feature-row.reverse .feature-text{order:1;}
+    .feature-row.reverse .feature-visual{order:2;}
+    section{padding:60px 20px;}
+  }
+</style>
+</head>
+<body>
+<canvas id="inkCanvas"></canvas>
+<div class="wrap">
+
+  <!-- 导航 -->
+  <nav class="nav" id="nav">
+    <div class="nav-logo"><a href="官网首页.html">AI Teacher</a></div>
+    <div class="nav-links">
+      <a href="官网首页.html">首页</a>
+      <a href="features.html" class="active">功能介绍</a>
+      <a href="cases.html">客户案例</a>
+      <a href="faq.html">常见问题</a>
+    </div>
+    <a href="faq.html#contact" class="nav-cta">预约演示</a>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <span class="eyebrow">FEATURES · 功能全景</span>
+    <h1>一套系统，<span class="accent">覆盖教与学</span><br>全流程</h1>
+    <p>从课前备课、课堂授课、实时互动，到课后作业批改、个性辅导、学情评估、家长看课——AI Teacher 以数字人教师为核心，打通教育全链路。</p>
+    <div class="brush-line"></div>
+  </section>
+
+  <!-- 四大痛点 -->
+  <section>
+    <div class="inner">
+      <div class="section-head reveal">
+        <span class="eyebrow">PAIN POINTS · 痛点直击</span>
+        <h2>教育的四大难题</h2>
+        <p class="section-sub">每一个难题，AI Teacher 都给出了答案</p>
+      </div>
+      <div class="pain-grid">
+        <div class="pain-card reveal">
+          <span class="num">01</span>
+          <div class="icon" style="background:linear-gradient(135deg,#8b2e2e,#b85555)">校</div>
+          <h3>学校招人难、成本高</h3>
+          <p>优秀教师招聘难、流动大、薪资成本持续攀升。一个 AI 教师可同时承担多个班级的授课工作，7×24 小时不知疲倦，寒暑假亦可低成本辅导。</p>
+          <span class="tag">降本增效</span>
+        </div>
+        <div class="pain-card reveal">
+          <span class="num">02</span>
+          <div class="icon" style="background:linear-gradient(135deg,#4a6b5a,#6a8b7a)">家</div>
+          <h3>家长辅导难、沟通少</h3>
+          <p>家长工作繁忙无力辅导，对孩子课堂表现一无所知。AI Teacher 支持家长实时看课、接收课堂表现通知、查看综合评估报告，家校沟通零障碍。</p>
+          <span class="tag">家校透明</span>
+        </div>
+        <div class="pain-card reveal">
+          <span class="num">03</span>
+          <div class="icon" style="background:linear-gradient(135deg,#5a6b8a,#7a8baa)">学</div>
+          <h3>学生资源不均、个性化缺失</h3>
+          <p>大班教学难以兼顾每个学生的节奏。AI Teacher 基于每个学生的历史数据生成个性化学习路径，错题自动归集、薄弱知识点针对性强化，因材施教。</p>
+          <span class="tag">因材施教</span>
+        </div>
+        <div class="pain-card reveal">
+          <span class="num">04</span>
+          <div class="icon" style="background:linear-gradient(135deg,#8a6b4a,#aa8b6a)">评</div>
+          <h3>评估滞后、数据零散</h3>
+          <p>传统评估依赖考试成绩，反馈周期长、维度单一。AI Teacher 每节课后即时生成多维度表现评分，结合作业、考试、课堂行为生成综合评估报告，数据驱动决策。</p>
+          <span class="tag">数据驱动</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 核心功能详情 -->
+  <section style="background:linear-gradient(180deg,#e4e9ed 0%,#dde4e9 100%);border-radius:48px;margin:0 24px;">
+    <div class="inner">
+      <div class="section-head reveal">
+        <span class="eyebrow">CORE FEATURES · 核心功能</span>
+        <h2>六大核心能力</h2>
+        <p class="section-sub">从课堂到课后，每一个环节都有 AI 深度参与</p>
+      </div>
+
+      <!-- 功能1：数字人授课 -->
+      <div class="feature-row reveal">
+        <div class="feature-text">
+          <span class="tag">课堂教学</span>
+          <h3>数字人教师<br>自动授课</h3>
+          <p>基于教材电子版本，AI 自动生成教学大纲、PPT 课件与讲稿。数字人教师按稿授课，口型同步、手势自然，支持即兴提问与知识点拓展。</p>
+          <p>一个科目一个 Agent，也可一个 Agent 教所有科目，按学校需求灵活配置。课前自动预热缓存，断网亦可讲完本节课。</p>
+          <ul class="feature-list">
+            <li>教材自动解析 → 大纲生成 → PPT 制作 → 讲稿撰写</li>
+            <li>2D/3D 数字人形象，可按学校定制（另收费）</li>
+            <li>三种教学风格：严肃型 / 温柔型 / 幽默型</li>
+            <li>即兴点名、课堂提问、案例插入</li>
+          </ul>
+        </div>
+        <div class="feature-visual">
+          <div class="visual-card">
+            <div class="visual-title">课堂实时画面模拟</div>
+            <div class="visual-body">
+              <div class="classroom-mock">
+                <div class="mock-screen">
+                  <div class="mock-board">
+                    <div>第三课 · 函数的概念</div>
+                    <div class="line"></div>
+                    <div class="line short"></div>
+                    <div class="line"></div>
+                  </div>
+                  <div class="mock-avatar"></div>
+                </div>
+                <div class="mock-side">
+                  <div class="mock-student"><span class="dot"></span>张同学 专注</div>
+                  <div class="mock-student"><span class="dot"></span>李同学 专注</div>
+                  <div class="mock-student alert"><span class="dot"></span>王同学 讲话</div>
+                  <div class="mock-student"><span class="dot"></span>赵同学 举手</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 功能2：实时互动 -->
+      <div class="feature-row reverse reveal">
+        <div class="feature-text">
+          <span class="tag">课堂互动</span>
+          <h3>实时视觉感知<br>课堂全掌控</h3>
+          <p>教室盒子配备双目摄像头与四麦阵列，AI 实时识别学生举手、讲话、走动、趴桌睡觉、迟到早退等行为，即时反馈给数字人教师。</p>
+          <p>学生举手即被识别并叫起回答；纪律问题自动警告并扣分；睡觉学生自动通知家长。旁听老师可实时纠正 AI 授课内容。</p>
+          <ul class="feature-list">
+            <li>人脸检测/识别：全班学生实时定位与身份确认</li>
+            <li>行为识别：举手 / 讲话 / 走动 / 睡觉 / 迟到 / 早退</li>
+            <li>四麦阵列噪声检测：课堂嘈杂度实时监控</li>
+            <li>请假学生自动排除，不会被提问</li>
+          </ul>
+        </div>
+        <div class="feature-visual">
+          <div class="visual-card">
+            <div class="visual-title">行为识别事件流</div>
+            <div class="visual-body" style="gap:10px;display:flex;flex-direction:column;">
+              <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:rgba(74,107,90,0.08);border-radius:10px;">
+                <span style="width:8px;height:8px;border-radius:50%;background:var(--jade);"></span>
+                <span style="font-size:13px;font-family:'Noto Sans SC',sans-serif;color:var(--jade);">09:02 张同学 举手 → 已叫起回答</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:rgba(139,46,46,0.08);border-radius:10px;">
+                <span style="width:8px;height:8px;border-radius:50%;background:var(--cinnabar);animation:blink 1s infinite;"></span>
+                <span style="font-size:13px;font-family:'Noto Sans SC',sans-serif;color:var(--cinnabar);">09:05 王同学 课堂讲话 → 已警告扣2分</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:rgba(139,46,46,0.05);border-radius:10px;">
+                <span style="width:8px;height:8px;border-radius:50%;background:#ecc94b;"></span>
+                <span style="font-size:13px;font-family:'Noto Sans SC',sans-serif;color:#92400e;">09:08 李同学 趴桌睡觉 → 已通知家长</span>
+              </div>
+              <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;background:rgba(74,107,90,0.05);border-radius:10px;">
+                <span style="width:8px;height:8px;border-radius:50%;background:var(--jade);"></span>
+                <span style="font-size:13px;font-family:'Noto Sans SC',sans-serif;color:var(--ink-soft);">09:10 旁听老师 纠正：补充导数定义</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 功能3：作业批改 -->
+      <div class="feature-row reveal">
+        <div class="feature-text">
+          <span class="tag">课后作业</span>
+          <h3>AI 自动批改<br>全题型覆盖</h3>
+          <p>AI 按教案自动生成作业，管理员确认后下发至学生小程序。学生拍照提交，AI 自动批改客观题、主观题、计算题，按步骤给分并生成评语。</p>
+          <p>管理员可复核调整，错题自动归集到学生个人错题本，薄弱知识点针对性推送强化练习。</p>
+          <ul class="feature-list">
+            <li>客观题：选择/填空 100% 自动判分</li>
+            <li>主观题：作文/论述 AI 初评 + 管理员复核</li>
+            <li>计算题：识别解题步骤，按步骤给分</li>
+            <li>错题自动归集 → 薄弱知识点 → 强化推送</li>
+          </ul>
+        </div>
+        <div class="feature-visual">
+          <div class="visual-card">
+            <div class="visual-title">AI 批改结果</div>
+            <div class="visual-body">
+              <div class="homework-mock">
+                <div class="hw-item"><div class="hw-check correct">✓</div><div class="hw-text">1. 求函数 f(x)=x²+2x 的导数</div><div class="hw-score">5/5</div></div>
+                <div class="hw-item"><div class="hw-check correct">✓</div><div class="hw-text">2. 选择题：下列哪个是奇函数？</div><div class="hw-score">3/3</div></div>
+                <div class="hw-item"><div class="hw-check wrong">✗</div><div class="hw-text">3. 证明：可导函数必连续（步骤遗漏）</div><div class="hw-score">2/5</div></div>
+                <div class="hw-item"><div class="hw-check correct">✓</div><div class="hw-text">4. 填空题：lim(x→0) sinx/x = ?</div><div class="hw-score">2/2</div></div>
+              </div>
+              <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;">
+                <span style="font-size:13px;color:var(--muted);font-family:'Noto Sans SC',sans-serif;">AI 总评</span>
+                <span style="font-size:24px;font-weight:900;color:var(--cinnabar);font-family:'Noto Sans SC',sans-serif;">12/15</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 功能4：个性辅导 -->
+      <div class="feature-row reverse reveal">
+        <div class="feature-text">
+          <span class="tag">个性辅导</span>
+          <h3>一对一 AI 辅导<br>随时随地</h3>
+          <p>学生佩戴智能眼镜与手表，AI 辅导 Agent 通过摄像头"看"到学生的作业与书本，通过麦克风"听"到学生的提问，实时语音回答。</p>
+          <p>辅导服务按学生开通，学校统一订购。支持 SOS 一键求助，辅导数据与课堂数据打通，生成完整学习画像。</p>
+          <ul class="feature-list">
+            <li>智能眼镜：第一视角采集，AI "看"题讲题</li>
+            <li>智能手表：拾音 + 一键求助，轻便佩戴</li>
+            <li>ASR 语音识别 → LLM 思考 → TTS 语音回答</li>
+            <li>辅导记录自动归档，与课堂评估联动</li>
+          </ul>
+        </div>
+        <div class="feature-visual">
+          <div class="visual-card">
+            <div class="visual-title">辅导对话流程</div>
+            <div class="visual-body" style="gap:12px;display:flex;flex-direction:column;">
+              <div style="align-self:flex-start;max-width:80%;padding:12px 16px;background:rgba(74,107,90,0.1);border-radius:16px 16px 16px 4px;font-size:13px;font-family:'Noto Sans SC',sans-serif;color:var(--ink-soft);">
+                学生：老师，这道二次函数题怎么做？
+              </div>
+              <div style="align-self:flex-end;max-width:80%;padding:12px 16px;background:var(--cinnabar);color:#fff;border-radius:16px 16px 4px 16px;font-size:13px;font-family:'Noto Sans SC',sans-serif;">
+                AI：好的，我们先看这道题的已知条件...首先回忆二次函数的顶点式...
+              </div>
+              <div style="align-self:flex-start;max-width:80%;padding:12px 16px;background:rgba(74,107,90,0.1);border-radius:16px 16px 16px 4px;font-size:13px;font-family:'Noto Sans SC',sans-serif;color:var(--ink-soft);">
+                学生：明白了，那为什么要配方呢？
+              </div>
+              <div style="align-self:flex-end;max-width:80%;padding:12px 16px;background:var(--cinnabar);color:#fff;border-radius:16px 16px 4px 16px;font-size:13px;font-family:'Noto Sans SC',sans-serif;">
+                AI：配方是为了把一般式转化为顶点式，这样可以直接看出顶点坐标和对称轴...
+              </div>
+              <div style="text-align:center;font-size:11px;color:var(--muted);font-family:'Noto Sans SC',sans-serif;margin-top:4px;">平均响应延迟 < 2 秒</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 功能5：评估报告 -->
+      <div class="feature-row reveal">
+        <div class="feature-text">
+          <span class="tag">学情评估</span>
+          <h3>全维度评估<br>数据驱动成长</h3>
+          <p>每节课后 AI 自动从课堂参与、纪律表现、答题正确率、互动质量四个维度为每个学生打分。结合作业、考试、辅导数据生成综合评估报告。</p>
+          <p>支持班级/年级/校级/市级/省级/全国多级排名，成绩下滑自动预警。评估报告可一键分享至朋友圈，免登录可见。</p>
+          <ul class="feature-list">
+            <li>课后四维评分：参与度 / 纪律 / 答题 / 互动</li>
+            <li>综合报告：课堂 + 作业 + 考试 + 辅导全维度</li>
+            <li>多级排名：班级 / 年级 / 校级 / 市级 / 省级 / 全国</li>
+            <li>自动预警：成绩下滑 / 连续缺课 / 纪律异常</li>
+          </ul>
+        </div>
+        <div class="feature-visual">
+          <div class="visual-card">
+            <div class="visual-title">学生综合评估面板</div>
+            <div class="visual-body">
+              <div class="data-mock">
+                <div class="data-stat"><div class="val">92</div><div class="label">综合评分</div></div>
+                <div class="data-stat"><div class="val">#3</div><div class="label">班级排名</div></div>
+                <div class="data-stat"><div class="val">#28</div><div class="label">年级排名</div></div>
+                <div class="data-stat"><div class="val">A+</div><div class="label">趋势等级</div></div>
+              </div>
+              <div class="data-chart">
+                <div class="bar" style="height:40%"></div>
+                <div class="bar" style="height:55%"></div>
+                <div class="bar" style="height:48%"></div>
+                <div class="bar" style="height:65%"></div>
+                <div class="bar" style="height:72%"></div>
+                <div class="bar" style="height:68%"></div>
+                <div class="bar" style="height:85%"></div>
+              </div>
+              <div style="text-align:center;font-size:11px;color:var(--muted);margin-top:8px;font-family:'Noto Sans SC',sans-serif;">近7次课表现趋势</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 功能6：家长看课 -->
+      <div class="feature-row reverse reveal">
+        <div class="feature-text">
+          <span class="tag">家校互动</span>
+          <h3>家长实时看课<br>家校零障碍</h3>
+          <p>教室摄像头实时推流至云端，家长通过微信小程序即可观看孩子上课的实时画面，了解课堂内容与孩子状态。</p>
+          <p>家长留言经审核后可由 AI 在课堂上口头转达给学生（如"妈妈说今天加油"）。满意度问卷课后推送，家长反馈直接影响 AI 教学优化。</p>
+          <ul class="feature-list">
+            <li>实时直播：低延迟（< 3秒）课堂画面推送</li>
+            <li>三端模式：学生 / 家长 / 教师，各见所需</li>
+            <li>家长留言 → AI 课堂口头转达</li>
+            <li>课后满意度问卷 → 数据驱动教学优化</li>
+          </ul>
+        </div>
+        <div class="feature-visual">
+          <div class="visual-card">
+            <div class="visual-title">家长小程序看课</div>
+            <div class="visual-body" style="align-items:center;">
+              <div style="width:200px;background:linear-gradient(135deg,#1a2a3a,#2a3a4a);border-radius:20px;padding:16px;position:relative;overflow:hidden;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;">
+                  <span style="font-size:11px;color:rgba(255,255,255,0.7);font-family:'Noto Sans SC',sans-serif;">高一(3)班 · 数学课</span>
+                  <span style="display:flex;align-items:center;gap:4px;font-size:10px;color:#fc8181;font-family:'Noto Sans SC',sans-serif;"><span style="width:6px;height:6px;border-radius:50%;background:#fc8181;animation:blink 1s infinite;"></span>LIVE</span>
+                </div>
+                <div style="height:120px;background:linear-gradient(135deg,rgba(139,46,46,0.2),rgba(74,107,90,0.2));border-radius:10px;display:flex;align-items:center;justify-content:center;position:relative;">
+                  <div style="width:40px;height:40px;border-radius:50%;background:rgba(255,255,255,0.2);display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;">▶</div>
+                </div>
+                <div style="margin-top:12px;display:flex;gap:8px;">
+                  <div style="flex:1;padding:8px;background:rgba(255,255,255,0.08);border-radius:8px;text-align:center;">
+                    <div style="font-size:14px;font-weight:700;color:#fff;font-family:'Noto Sans SC',sans-serif;">专注</div>
+                    <div style="font-size:9px;color:rgba(255,255,255,0.5);font-family:'Noto Sans SC',sans-serif;">课堂状态</div>
+                  </div>
+                  <div style="flex:1;padding:8px;background:rgba(255,255,255,0.08);border-radius:8px;text-align:center;">
+                    <div style="font-size:14px;font-weight:700;color:#fff;font-family:'Noto Sans SC',sans-serif;">92分</div>
+                    <div style="font-size:9px;color:rgba(255,255,255,0.5);font-family:'Noto Sans SC',sans-serif;">今日表现</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 八宫格功能总览 -->
+  <section>
+    <div class="inner">
+      <div class="section-head reveal">
+        <span class="eyebrow">OVERVIEW · 功能总览</span>
+        <h2>更多能力</h2>
+        <p class="section-sub">每一个细节，都为教学场景精心设计</p>
+      </div>
+      <div class="overview-grid">
+        <div class="overview-item reveal"><div class="glyph">📋</div><h4>智能排课</h4><p>AI 根据教材进度自动排课，支持手动调课、月考/段考/期末考自动安排</p></div>
+        <div class="overview-item reveal"><div class="glyph">📝</div><h4>考试管理</h4><p>AI 组卷、锁卷、AI 监考（作弊行为识别）、自动判分、考试分析报告</p></div>
+        <div class="overview-item reveal"><div class="glyph">📊</div><h4>三级驾驶舱</h4><p>校级 / 年级 / 班级三级数据驾驶舱，实时掌握教学全局</p></div>
+        <div class="overview-item reveal"><div class="glyph">🏫</div><h4>多校区管理</h4><p>支持一个学校多个校区统一管理，数据隔离与汇总灵活配置</p></div>
+        <div class="overview-item reveal"><div class="glyph">🔔</div><h4>订阅消息</h4><p>作业下发、成绩公布、纪律警告、睡觉提醒，微信小程序主动推送</p></div>
+        <div class="overview-item reveal"><div class="glyph">📤</div><h4>分享传播</h4><p>综合评估报告一键分享朋友圈，免登录可见，含多级排名，品牌自传播</p></div>
+        <div class="overview-item reveal"><div class="glyph">🔒</div><h4>数据安全</h4><p>数据本地化存储，七级角色权限隔离，越权访问直接拒绝，敏感数据加密</p></div>
+        <div class="overview-item reveal"><div class="glyph">🔄</div><h4>双链路兜底</h4><p>主网线 + 4G 备用网络自动切换，课中断网可讲完预热内容，保障教学不中断</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <div class="inner reveal">
+      <h2>让 AI 成为<br>最可靠的老师</h2>
+      <p>一套系统，替代教师授课与辅导全流程。降本增效、因材施教、家校透明——AI Teacher，重新定义教育。</p>
+      <a href="faq.html#contact" class="btn btn-primary">预约演示 →</a>
+    </div>
+  </section>
+
+  <!-- 页脚 -->
+  <footer>
+    <div style="margin-bottom:16px;">
+      <a href="官网首页.html">首页</a>
+      <a href="features.html">功能介绍</a>
+      <a href="cases.html">客户案例</a>
+      <a href="faq.html">常见问题</a>
+    </div>
+    <p>© 2026 AI Teacher · 智能教学引擎 · 让每个学生都拥有专属 AI 老师</p>
+  </footer>
+
+</div>
+
+<script>
+// 水墨 Canvas 背景
+(function(){
+  const canvas = document.getElementById('inkCanvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, particles = [];
+  function resize(){ W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+  resize();
+  window.addEventListener('resize', resize);
+
+  // 水墨粒子
+  class Particle {
+    constructor(){ this.reset(); }
+    reset(){
+      this.x = Math.random()*W;
+      this.y = Math.random()*H;
+      this.r = Math.random()*60+20;
+      this.vx = (Math.random()-0.5)*0.3;
+      this.vy = (Math.random()-0.5)*0.2;
+      this.alpha = Math.random()*0.04+0.01;
+      this.life = 1;
+      this.decay = Math.random()*0.002+0.001;
+    }
+    update(){
+      this.x += this.vx; this.y += this.vy;
+      this.life -= this.decay;
+      if(this.life <= 0 || this.x < -100 || this.x > W+100 || this.y < -100 || this.y > H+100) this.reset();
+    }
+    draw(){
+      const g = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.r);
+      g.addColorStop(0, `rgba(139,46,46,${this.alpha*this.life})`);
+      g.addColorStop(1, 'rgba(139,46,46,0)');
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.arc(this.x, this.y, this.r, 0, Math.PI*2);
+      ctx.fill();
+    }
+  }
+  for(let i=0;i<25;i++) particles.push(new Particle());
+
+  // 公式/文字漂浮（教育感）
+  const formulas = ['∫f(x)dx','E=mc²','a²+b²=c²','∑','∞','√','π','Δ','→','∵','∴','sin','cos','tan','log','lim','d/dx'];
+  let textParticles = [];
+  for(let i=0;i<15;i++){
+    textParticles.push({
+      text: formulas[Math.floor(Math.random()*formulas.length)],
+      x: Math.random()*W, y: Math.random()*H,
+      vx: (Math.random()-0.5)*0.2, vy: (Math.random()-0.5)*0.15,
+      size: Math.random()*16+10, alpha: Math.random()*0.06+0.02,
+      rot: Math.random()*Math.PI*2
+    });
+  }
+
+  function animate(){
+    ctx.clearRect(0,0,W,H);
+    particles.forEach(p => { p.update(); p.draw(); });
+    textParticles.forEach(t => {
+      t.x += t.vx; t.y += t.vy;
+      if(t.x < -50) t.x = W+50; if(t.x > W+50) t.x = -50;
+      if(t.y < -50) t.y = H+50; if(t.y > H+50) t.y = -50;
+      ctx.save();
+      ctx.translate(t.x, t.y);
+      ctx.rotate(t.rot);
+      ctx.font = `${t.size}px 'Noto Serif SC', serif`;
+      ctx.fillStyle = `rgba(74,107,90,${t.alpha})`;
+      ctx.fillText(t.text, 0, 0);
+      ctx.restore();
+    });
+    requestAnimationFrame(animate);
+  }
+  animate();
+})();
+
+// 滚动揭示
+(function(){
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => { if(entry.isIntersecting){ entry.target.classList.add('visible'); observer.unobserve(entry.target); } });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+})();
+
+// 导航滚动效果
+window.addEventListener('scroll', () => {
+  const nav = document.getElementById('nav');
+  if(window.scrollY > 50) nav.classList.add('scrolled'); else nav.classList.remove('scrolled');
+});
+</script>
+</body>
+</html>

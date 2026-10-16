@@ -1,0 +1,133 @@
+# ============================================================
+# AI Teacher 开发环境 Docker Compose
+# 容器组名称: ai-tutor
+#
+# 【操作规范 — 务必遵守】
+#
+# 1. 日常启动:  .\start.ps1    (容器已存在则 start，不存在才 up -d)
+# 2. 日常停止:  .\stop.ps1     (仅 stop，不删除容器和数据卷)
+# 3. 查看状态:  .\status.ps1
+# 4. 重建容器:  .\rebuild.ps1  (仅大版本/功能版本变动时使用!)
+#
+# 【为什么不能随便 down / rm】
+# - down 会删除容器，下次 up 时需重新创建容器（耗时久）
+# - 容器内的临时状态、日志、运行时配置会丢失
+# - 本地虽有镜像，但重建过程仍然很慢（网络/初始化/健康检查）
+# - 数据卷(postgres_data/redis_data/minio_data) 不会被 down 删除，
+#   但容器重建后需要重新初始化连接，增加不必要的等待
+#
+# 【什么时候才需要重建】
+# - docker-compose.yml 中服务配置有大变动（端口/环境变量/挂载/镜像版本）
+# - 后端大版本升级，需要重新 build 镜像
+# - 容器损坏无法启动，且修复无效
+# - 除此之外，一律 stop / start
+#
+# 【开发环境端口偏移说明】
+# 本机常有其他项目占用 PostgreSQL 5432 / Redis 6379，故开发环境宿主端口向后偏移一位：
+#   PostgreSQL 宿主 5433 -> 容器 5432
+#   Redis      宿主 6380 -> 容器 6379
+# 容器之间仍用标准端口互访；只有从宿主机（如 backend/.env、psql、redis-cli）连接时才用 5433/6380。
+# 生产环境（docker-compose.prod.yml）不受影响，仍为 5432/6379。
+# ============================================================
+
+name: ai-tutor
+
+services:
+  # ====================
+  # PostgreSQL 主数据库
+  # ====================
+  postgres:
+    image: postgres:16-alpine
+    container_name: ai-teacher-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ai_teacher_dev_2026
+      POSTGRES_DB: ai_teacher
+    ports:
+      - "5433:5432"   # 宿主 5433 -> 容器 5432（5432 常被本机其他项目占用，故开发环境偏移一位）
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # ====================
+  # Redis 缓存 + 队列
+  # ====================
+  redis:
+    image: redis:7-alpine
+    container_name: ai-teacher-redis
+    restart: unless-stopped
+    ports:
+      - "6380:6379"   # 宿主 6380 -> 容器 6379（6379 常被本机其他项目占用）
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  # ====================
+  # MinIO 对象存储
+  # ====================
+  minio:
+    image: minio/minio:latest
+    container_name: ai-teacher-minio
+    restart: unless-stopped
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin123
+    ports:
+      - "9000:9000"   # S3 API
+      - "9001:9001"   # Web 控制台
+    volumes:
+      - minio_data:/data
+    command: server /data --console-address ":9001"
+
+  # ====================
+  # SRS 流媒体服务
+  # ====================
+  srs:
+    image: ossrs/srs:5
+    container_name: ai-teacher-srs
+    restart: unless-stopped
+    ports:
+      - "1935:1935"   # RTMP
+      - "8080:8080"   # HTTP 流媒体
+      - "1985:1985"   # HTTP API
+    volumes:
+      - ./srs.conf:/etc/srs/srs.conf
+
+  # ====================
+  # 后端 API（当前以 node dist/main 本地运行，未纳入 compose；
+  # 容器化部署时启用以下配置，healthcheck 探测 /api/v1）
+  # ====================
+  # backend:
+  #   image: ai-teacher-backend:latest
+  #   restart: unless-stopped
+  #   environment:
+  #     NODE_ENV: production
+  #     DATABASE_URL: postgresql://postgres:ai_teacher_dev_2026@postgres:5432/ai_teacher
+  #     JWT_SECRET: ${JWT_SECRET}
+  #     ALLOWED_ORIGINS: ${ALLOWED_ORIGINS:-http://localhost:5175}
+  #   ports:
+  #     - "3000:3000"
+  #   depends_on:
+  #     postgres:
+  #       condition: service_healthy
+  #   healthcheck:
+  #     test: ["CMD", "wget", "-qO-", "http://localhost:3000/api/v1"]
+  #     interval: 15s
+  #     timeout: 5s
+  #     retries: 5
+  #     start_period: 30s
+
+volumes:
+  postgres_data:
+  redis_data:
+  minio_data:

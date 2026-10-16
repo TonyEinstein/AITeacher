@@ -1,0 +1,119 @@
+<html style="margin:0;padding:0;">
+<title>AI Teacher 上课工作流：课前预制 + 课中实时互动</title>
+<div style="width:100%;box-sizing:border-box;font-family:'Segoe UI','Microsoft YaHei',sans-serif;background:#f5f7fa;padding:24px;">
+  <div style="max-width:1100px;margin:0 auto;">
+
+    <div style="text-align:center;margin-bottom:16px;">
+      <div style="font-size:22px;font-weight:700;color:#1f3a5f;">上课工作流：课前预制课件 + 课中实时互动</div>
+      <div style="font-size:13px;color:#6b7a90;margin-top:5px;">PPT 和讲稿提前做好保证质量 · 上课中 AI 即兴点名/提问/追问保留灵活</div>
+    </div>
+
+    <!-- 课前准备阶段 -->
+    <div style="background:#e0f5ec;border:2px solid #1fa876;border-radius:12px;padding:15px;margin-bottom:10px;">
+      <div style="font-size:15px;font-weight:700;color:#0f6b48;">📦 课前准备（离线，提前做好，不临场生成）</div>
+      <div style="font-size:11.5px;color:#3a7a60;margin-bottom:10px;">管理员传教材后，AI 自动批量生产，管理员可检查修改</div>
+
+      <div style="display:flex;gap:8px;align-items:stretch;flex-wrap:wrap;font-size:12px;">
+        <div style="flex:1;min-width:130px;background:#fff;border:1px solid #a8e0c8;border-radius:8px;padding:9px;text-align:center;">
+          <b style="color:#0f6b48;">📚 教材电子版</b><br><span style="color:#3a7a60;font-size:11px;">管理员上传</span>
+        </div>
+        <div style="display:flex;align-items:center;color:#1fa876;">→</div>
+        <div style="flex:1;min-width:130px;background:#fff;border:1px solid #a8e0c8;border-radius:8px;padding:9px;text-align:center;">
+          <b style="color:#0f6b48;">📅 AI 排课</b><br><span style="color:#3a7a60;font-size:11px;">这学期每天上哪节</span>
+        </div>
+        <div style="display:flex;align-items:center;color:#1fa876;">→</div>
+        <div style="flex:1;min-width:130px;background:#fff;border:1px solid #a8e0c8;border-radius:8px;padding:9px;text-align:center;">
+          <b style="color:#0f6b48;">📊 自动做 PPT</b><br><span style="color:#3a7a60;font-size:11px;">每节课一套课件</span>
+        </div>
+        <div style="display:flex;align-items:center;color:#1fa876;">→</div>
+        <div style="flex:1;min-width:130px;background:#fff;border:1px solid #a8e0c8;border-radius:8px;padding:9px;text-align:center;">
+          <b style="color:#0f6b48;">🎓 写讲解稿</b><br><span style="color:#3a7a60;font-size:11px;">数字人这节课讲什么</span>
+        </div>
+        <div style="display:flex;align-items:center;color:#1fa876;">→</div>
+        <div style="flex:1;min-width:130px;background:#fff;border:1px solid #a8e0c8;border-radius:8px;padding:9px;text-align:center;">
+          <b style="color:#0f6b48;">📦 打包成课件包</b><br><span style="color:#3a7a60;font-size:11px;">PPT+讲稿+互动预案，存本地</span>
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center;color:#1fa876;font-size:16px;margin:4px 0;">⏰ 到上课时间</div>
+
+    <!-- 课中执行阶段 -->
+    <div style="background:#eef2ff;border:2px solid #5b6fd8;border-radius:12px;padding:15px;">
+      <div style="font-size:15px;font-weight:700;color:#3a4490;">▶ 课中执行（投影上跑，两条线并行）</div>
+      <div style="font-size:11.5px;color:#5a5f90;margin-bottom:10px;">一条线按预制内容讲，一条线实时观察学生并即兴互动</div>
+
+      <div style="display:flex;gap:12px;flex-wrap:wrap;">
+
+        <!-- 主线：预制品 -->
+        <div style="flex:1.3;min-width:300px;background:#fff;border:1.5px solid #aab3e8;border-radius:10px;padding:12px;">
+          <div style="font-size:13px;font-weight:700;color:#3a4490;">🔵 主线：按预制课件讲（稳定）</div>
+          <div style="font-size:12px;color:#4a4f80;margin-top:8px;line-height:2;">
+            · 加载这节课的课件包<br>
+            · 数字人按讲稿开口讲（TTS）<br>
+            · PPT 自动按节奏翻页<br>
+            · 讲到例题就停下来，等学生答<br>
+            · 按教案走，不临场胡编
+          </div>
+        </div>
+
+        <!-- 副线：实时互动 -->
+        <div style="flex:1.3;min-width:300px;background:#fff;border:1.5px solid #f0a04b;border-radius:10px;padding:12px;">
+          <div style="font-size:13px;font-weight:700;color:#b06a10;">🟠 副线：实时观察 + 即兴互动（灵活）</div>
+          <div style="font-size:12px;color:#8a6a30;margin-top:8px;line-height:2;">
+            · 🎤 麦克风实时收学生回答 → LLM 即兴点评、追问<br>
+            · 📷 摄像头实时看谁举手、谁走神 → 即兴点名<br>
+            · 看到有人答得好/差，临时插一道小练习<br>
+            · 发现纪律问题，即兴提醒、记纪律分<br>
+            · 这些是现场 LLM 调用，不在预制稿里
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 投影画面合成 -->
+      <div style="margin-top:12px;background:#1f2937;border-radius:10px;padding:0;overflow:hidden;">
+        <div style="background:#0f172a;color:#cbd5e1;font-size:11px;padding:6px 12px;">🖥 投影上看到的合成效果</div>
+        <div style="display:flex;height:150px;">
+          <div style="flex:1.4;background:#f8fafc;margin:10px;border-radius:6px;padding:10px;">
+            <div style="font-size:11px;color:#64748b;">📑 PPT（预制翻页）</div>
+            <div style="font-size:12px;font-weight:700;color:#1e293b;margin-top:6px;">一元一次方程 · 例题讲解</div>
+          </div>
+          <div style="flex:1;background:linear-gradient(180deg,#334155,#1e293b);margin:10px 10px 10px 0;border-radius:6px;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;">
+            <div style="font-size:36px;margin-bottom:4px;">🧑‍🏫</div>
+            <div style="width:60%;height:5px;background:#475569;border-radius:3px;margin-bottom:8px;">
+              <div style="width:70%;height:100%;background:#38bdf8;border-radius:3px;"></div>
+            </div>
+            <div style="font-size:9.5px;color:#94a3b8;margin-bottom:6px;">数字人按讲稿讲 · 随时即兴插话</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 为什么这样设计 -->
+    <div style="background:#fff;border:1.5px solid #d8e0ec;border-radius:12px;padding:14px;margin-top:12px;">
+      <div style="font-size:14px;font-weight:700;color:#1f3a5f;margin-bottom:8px;">为什么是"预制+实时"混合，而不是全实时？</div>
+      <table style="width:100%;border-collapse:collapse;font-size:12px;color:#3a4556;">
+        <thead><tr style="background:#eef2f8;">
+          <th style="padding:7px;border:1px solid #d8e0ec;text-align:left;">做法</th>
+          <th style="padding:7px;border:1px solid #d8e0ec;text-align:left;">问题</th>
+        </tr></thead>
+        <tbody>
+          <tr>
+            <td style="padding:7px;border:1px solid #d8e0ec;"><b>全实时（上课才生成 PPT 和讲稿）</b></td>
+            <td style="padding:7px;border:1px solid #d8e0ec;">临场生成会卡、会乱说、可能讲错知识点，管理员来不及把关</td>
+          </tr>
+          <tr>
+            <td style="padding:7px;border:1px solid #d8e0ec;"><b>全预制（录像一样放）</b></td>
+            <td style="padding:7px;border:1px solid #d8e0ec;">没法互动、不知道谁走神、学生回答了也没法回应——就是你说的"不灵活"</td>
+          </tr>
+          <tr>
+            <td style="padding:7px;border:1px solid #d8e0ec;background:#f0faf4;"><b>预制主课 + 实时互动（你选的这个）</b></td>
+            <td style="padding:7px;border:1px solid #d8e0ec;background:#f0faf4;">内容质量有保证（提前过审），互动又灵活（现场听看问）——两边都占</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>

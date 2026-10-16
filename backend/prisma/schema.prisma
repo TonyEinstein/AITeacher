@@ -1,0 +1,934 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ====================
+// 组织架构相关表
+// ====================
+
+model School {
+  id           Int       @id @default(autoincrement())
+  name         String
+  code         String    @unique
+  province     String? // 省份，用于跨校排名按省筛选
+  city         String? // 城市，用于跨校排名按市筛选
+  county       String? // 区/县，用于跨校排名按县筛选（PRD §3.27）
+  status       String    @default("active") // active, inactive, trial
+  contactName  String? // 联系人
+  contactPhone String? // 联系电话
+  expiresAt    DateTime?
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+
+  campuses      Campus[]
+  grades        Grade[]
+  users         User[]
+  boxes         Box[]
+  rooms         Room[]
+  agents        Agent[]
+  textbooks     Textbook[]
+  schedules     Schedule[]
+  assignments   Assignment[]
+  exams         Exam[]
+  subscriptions Subscription[]
+  usageLogs     UsageLog[]
+  workOrders    WorkOrder[]
+}
+
+model WorkOrder {
+  id           Int       @id @default(autoincrement())
+  schoolId     Int
+  title        String
+  type         String    @default("device_repair") // device_repair, subscription, network, software, other
+  priority     String    @default("medium") // low, medium, high, urgent
+  status       String    @default("pending") // pending, processing, resolved, closed
+  description  String
+  contactName  String?
+  contactPhone String?
+  assignee     String?
+  resolution   String?
+  faultCode    String? // 关联设备故障编码
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  resolvedAt   DateTime?
+
+  school School @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+
+  @@index([schoolId])
+  @@index([status])
+}
+
+model Campus {
+  id        Int      @id @default(autoincrement())
+  schoolId  Int
+  name      String
+  address   String?
+  createdAt DateTime @default(now())
+
+  school School  @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  grades Grade[]
+}
+
+model Grade {
+  id        Int      @id @default(autoincrement())
+  schoolId  Int
+  campusId  Int?
+  name      String // 高一、高二、高三
+  createdAt DateTime @default(now())
+
+  school  School  @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  campus  Campus? @relation(fields: [campusId], references: [id])
+  classes Class[]
+  users   User[]
+}
+
+model Class {
+  id        Int       @id @default(autoincrement())
+  gradeId   Int
+  name      String // 1班、2班
+  deletedAt DateTime? // 软删除（PRD §21.2）
+  createdAt DateTime  @default(now())
+
+  grade         Grade          @relation(fields: [gradeId], references: [id])
+  students      Student[]
+  schedules     Schedule[]
+  lessonRecords LessonRecord[]
+}
+
+model Subject {
+  id        Int      @id @default(autoincrement())
+  name      String // 语文、数学、英语...
+  code      String   @unique // chinese, math, english...
+  createdAt DateTime @default(now())
+
+  textbooks     Textbook[]
+  agents        Agent[]
+  lessonPlans   LessonPlan[]
+  questionBanks QuestionBank[]
+  users         User[]
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  schoolId  Int?
+  gradeId   Int?
+  subjectId Int?
+  username  String   @unique
+  password  String
+  name      String
+  role      String // super_admin, group_admin(跨校汇总,等同super_admin), school_admin, grade_admin, subject_admin, teacher
+  email     String?
+  phone     String?
+  status    String   @default("active")
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  school  School?  @relation(fields: [schoolId], references: [id], onDelete: SetNull)
+  grade   Grade?   @relation(fields: [gradeId], references: [id])
+  subject Subject? @relation(fields: [subjectId], references: [id])
+}
+
+// ====================
+// 学生/家长相关表
+// ====================
+
+model Student {
+  id        Int       @id @default(autoincrement())
+  classId   Int
+  name      String
+  studentNo String    @unique // 学号
+  gender    String?
+  avatar    String?
+  status    String    @default("active")
+  deletedAt DateTime? // 软删除（PRD §21.2）；null=未删除
+  createdAt DateTime  @default(now())
+
+  class                Class                 @relation(fields: [classId], references: [id])
+  parents              Parent[]
+  attendance           Attendance[]
+  evaluations          Evaluation[]
+  scores               Score[]
+  submissions          Submission[]
+  wrongQuestions       WrongQuestion[]
+  tutoringSessions     TutoringSession[]
+  leaves               Leave[]
+  warnings             Warning[]
+  behaviorEvents       BehaviorEvent[]
+  notifications        Notification[]
+  myopiaReminders      MyopiaReminder[]
+  alerts               StudentAlert[]
+  studentProfiles      StudentProfile[]
+  studentPreferences   StudentPreference[]
+  devices              Device[]
+  tutoringSubscription TutoringSubscription?
+  facePhotos           FacePhoto[]
+
+  @@index([classId])
+}
+
+model Parent {
+  id        Int      @id @default(autoincrement())
+  studentId Int
+  openId    String   @unique // 微信 openid
+  name      String?
+  phone     String?
+  relation  String? // father, mother...
+  createdAt DateTime @default(now())
+
+  student         Student          @relation(fields: [studentId], references: [id])
+  parentMessages  ParentMessage[]
+  surveyResponses SurveyResponse[]
+}
+
+model ParentMessage {
+  id        Int      @id @default(autoincrement())
+  parentId  Int
+  content   String
+  status    String   @default("pending") // pending, approved, rejected, delivered
+  createdAt DateTime @default(now())
+
+  parent Parent @relation(fields: [parentId], references: [id])
+}
+
+// ====================
+// 教学相关表
+// ====================
+
+model Textbook {
+  id        Int      @id @default(autoincrement())
+  schoolId  Int
+  subjectId Int
+  title     String
+  author    String?
+  version   String? // 人教版、北师大版...
+  filePath  String // MinIO 路径
+  chapters  String? // 解析出的章节结构(JSON数组)
+  status    String   @default("uploaded") // uploaded, parsing, parsed, failed
+  createdAt DateTime @default(now())
+
+  school      School       @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  subject     Subject      @relation(fields: [subjectId], references: [id])
+  lessonPlans LessonPlan[]
+}
+
+model LessonPlan {
+  id         Int       @id @default(autoincrement())
+  textbookId Int
+  subjectId  Int
+  title      String
+  chapter    String?
+  content    Json // PPT 大纲 + 讲稿 + 提问
+  status     String    @default("draft") // draft, confirmed, locked
+  deletedAt  DateTime? // 软删除（PRD §21.2）
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+
+  textbook      Textbook       @relation(fields: [textbookId], references: [id])
+  subject       Subject        @relation(fields: [subjectId], references: [id])
+  schedules     Schedule[]
+  lessonRecords LessonRecord[]
+  assignments   Assignment[]
+}
+
+model Agent {
+  id        Int      @id @default(autoincrement())
+  schoolId  Int
+  subjectId Int
+  name      String
+  type      String // class_teacher, tutor
+  model     String // deepseek, doubao, glm
+  style     String? // serious, gentle, humorous
+  status    String   @default("active")
+  createdAt DateTime @default(now())
+
+  school           School            @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  subject          Subject           @relation(fields: [subjectId], references: [id])
+  schedules        Schedule[]
+  lessonRecords    LessonRecord[]
+  tutoringSessions TutoringSession[]
+}
+
+model Schedule {
+  id                 Int       @id @default(autoincrement())
+  schoolId           Int
+  classId            Int
+  agentId            Int?
+  lessonPlanId       Int?
+  roomId             Int?
+  startTime          DateTime
+  endTime            DateTime
+  status             String    @default("scheduled") // scheduled, ongoing, completed, cancelled
+  cancelReason       String? // 停课原因（临时停课/调课时填写）
+  cancelledAt        DateTime? // 停课时间
+  originalScheduleId Int? // 补课溯源：本课是为哪一节被停的课补的
+  deletedAt          DateTime? // 软删除（PRD §21.2）
+  createdAt          DateTime  @default(now())
+
+  school        School?        @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  class         Class          @relation(fields: [classId], references: [id], onDelete: Cascade)
+  agent         Agent?         @relation(fields: [agentId], references: [id])
+  lessonPlan    LessonPlan?    @relation(fields: [lessonPlanId], references: [id])
+  room          Room?          @relation(fields: [roomId], references: [id])
+  lessonRecords LessonRecord[]
+
+  // 补课关系：originalSchedule 是「被停的原课」，makeups 是「为它补的课」
+  originalSchedule Schedule?  @relation("ScheduleMakeup", fields: [originalScheduleId], references: [id])
+  makeups          Schedule[] @relation("ScheduleMakeup")
+
+  @@index([schoolId, classId, startTime])
+}
+
+model Room {
+  id        Int      @id @default(autoincrement())
+  schoolId  Int
+  name      String // 教室名称
+  code      String   @unique // 教室编号
+  capacity  Int?
+  createdAt DateTime @default(now())
+
+  school    School     @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  boxes     Box[]
+  schedules Schedule[]
+}
+
+model Box {
+  id              Int       @id @default(autoincrement())
+  schoolId        Int
+  roomId          Int?
+  serialNumber    String    @unique // 设备序列号
+  type            String // classroom, camera, microphone, 4g, help_key
+  status          String    @default("offline") // online, offline, error
+  firmwareVersion String? // 盒子当前固件/应用版本
+  otaGroup        String    @default("stable") // OTA 灰度分组（PRD §4.4.1）：canary(灰度), stable(正式)
+  lastHeartbeat   DateTime?
+  faultCode       String? // 故障编码，如 E1001
+  faultMessage    String? // 故障描述/报错原因
+  lastErrorAt     DateTime? // 最近一次故障时间
+  deviceToken     String?   @db.VarChar(64) // 设备心跳鉴权 token（注册时下发）
+  deletedAt       DateTime? // 软删除（PRD §21.2）
+  createdAt       DateTime  @default(now())
+
+  school  School   @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  room    Room?    @relation(fields: [roomId], references: [id])
+  devices Device[]
+
+  @@index([schoolId])
+  @@index([otaGroup])
+}
+
+// OTA 发布记录（PRD §4.4.1）：灰度发布与版本回滚的溯源
+model OtaRelease {
+  id                Int      @id @default(autoincrement())
+  version           String // 目标版本
+  packageUrl        String
+  checksum          String?
+  channel           String   @default("stable") // canary, stable
+  action            String   @default("release") // release(发布), rollback(回滚)
+  // rollback 时指向被回滚到的版本
+  rollbackToVersion String?
+  note              String?
+  createdBy         Int? // 操作人 userId
+  createdAt         DateTime @default(now())
+}
+
+// ====================
+// 作业相关表
+// ====================
+
+model Assignment {
+  id           Int       @id @default(autoincrement())
+  schoolId     Int
+  lessonPlanId Int?
+  title        String
+  content      Json // 作业内容
+  type         String // homework, in_class
+  dueDate      DateTime?
+  status       String    @default("draft") // draft, confirmed, published, closed
+  deletedAt    DateTime? // 软删除（PRD §21.2）
+  createdAt    DateTime  @default(now())
+
+  school      School?      @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  lessonPlan  LessonPlan?  @relation(fields: [lessonPlanId], references: [id])
+  submissions Submission[]
+}
+
+model Submission {
+  id           Int       @id @default(autoincrement())
+  assignmentId Int
+  studentId    Int
+  content      Json? // 答案内容
+  fileUrl      String? // 拍照上传的文件
+  score        Float?
+  comment      String?
+  status       String    @default("submitted") // submitted, graded, reviewed
+  reviewerId   Int? // 复核教师 userId（老数据为 null）
+  submittedAt  DateTime?
+  reviewedAt   DateTime? // 老师复核时间（工作量时效用）
+  createdAt    DateTime  @default(now())
+
+  assignment Assignment @relation(fields: [assignmentId], references: [id], onDelete: Cascade)
+  student    Student    @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@index([assignmentId, studentId])
+  @@index([status, reviewedAt])
+}
+
+model QuestionBank {
+  id             Int      @id @default(autoincrement())
+  subjectId      Int
+  question       String
+  type           String // choice, fill, essay, calculation
+  answer         String
+  difficulty     Int // 1-5
+  knowledgePoint String?
+  createdAt      DateTime @default(now())
+
+  subject Subject? @relation(fields: [subjectId], references: [id])
+}
+
+model WrongQuestion {
+  id             Int      @id @default(autoincrement())
+  studentId      Int
+  questionBankId Int?
+  subjectId      Int? // 学科，用于按学科统计薄弱点
+  knowledgePoint String? // 知识点（批改时从题目带出），用于聚合薄弱画像
+  question       String
+  userAnswer     String
+  correctAnswer  String
+  createdAt      DateTime @default(now())
+
+  student Student @relation(fields: [studentId], references: [id])
+
+  @@index([studentId, subjectId])
+  @@index([studentId, knowledgePoint])
+}
+
+// ====================
+// 考试相关表
+// ====================
+
+model Exam {
+  id        Int      @id @default(autoincrement())
+  schoolId  Int
+  name      String // 月考、段考、期末考
+  type      String // monthly, midterm, final
+  subjectId Int?
+  startTime DateTime
+  endTime   DateTime
+  status    String   @default("scheduled")
+  createdAt DateTime @default(now())
+
+  school     School?     @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+  papers     Paper[]
+  scores     Score[]
+  examCheats ExamCheat[]
+}
+
+model Paper {
+  id        Int      @id @default(autoincrement())
+  examId    Int
+  title     String
+  content   Json // 试卷内容
+  status    String   @default("draft") // draft, confirmed, locked
+  createdAt DateTime @default(now())
+
+  exam   Exam    @relation(fields: [examId], references: [id])
+  scores Score[]
+}
+
+model Score {
+  id        Int      @id @default(autoincrement())
+  examId    Int
+  paperId   Int?
+  studentId Int
+  score     Float
+  rank      Int?
+  level     String? // excellent, good, pass, fail
+  createdAt DateTime @default(now())
+
+  exam    Exam    @relation(fields: [examId], references: [id], onDelete: Cascade)
+  paper   Paper?  @relation(fields: [paperId], references: [id])
+  student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@index([examId, studentId])
+}
+
+model ExamCheat {
+  id        Int      @id @default(autoincrement())
+  examId    Int
+  studentId Int
+  type      String // looking_around, phone, talking
+  evidence  String? // 截图/录像路径
+  createdAt DateTime @default(now())
+
+  exam Exam @relation(fields: [examId], references: [id])
+}
+
+// ====================
+// 课堂相关表
+// ====================
+
+model LessonRecord {
+  id           Int       @id @default(autoincrement())
+  scheduleId   Int
+  classId      Int
+  agentId      Int?
+  lessonPlanId Int?
+  startedAt    DateTime?
+  endedAt      DateTime?
+  status       String    @default("pending") // pending, ongoing, completed
+  summary      Json? // 课堂总结
+  createdAt    DateTime  @default(now())
+
+  schedule         Schedule               @relation(fields: [scheduleId], references: [id])
+  class            Class                  @relation(fields: [classId], references: [id])
+  agent            Agent?                 @relation(fields: [agentId], references: [id])
+  attendance       Attendance[]
+  behaviorEvents   BehaviorEvent[]
+  minuteAggregates ClassMinuteAggregate[]
+  warnings         Warning[]
+  evaluations      Evaluation[]
+  myopiaReminders  MyopiaReminder[]
+  lessonPlan       LessonPlan?            @relation(fields: [lessonPlanId], references: [id])
+}
+
+model BehaviorEvent {
+  id             Int       @id @default(autoincrement())
+  lessonRecordId Int
+  studentId      Int?
+  edgeTrackId    String? // 边缘端 ByteTrack track_id（硬件未绑学生时用）
+  type           String // focus, hand_raise, writing, standing, sleeping, using_phone, talking, eating, leaving_seat, walking
+  category       String? // normal, violation, violation_conditional
+  confidence     Float? // 模型置信度
+  bbox           String? // [x1,y1,x2,y2] JSON
+  videoUrl       String? // 违纪视频 MinIO 路径
+  snapshotUrls   String? // 3 张关键帧 JSON 数组
+  acknowledged   Boolean   @default(false) // Agent 是否已处理
+  startTime      DateTime
+  endTime        DateTime?
+  durationSec    Int?
+  note           String?
+  createdAt      DateTime  @default(now())
+
+  lessonRecord LessonRecord @relation(fields: [lessonRecordId], references: [id])
+  student      Student?     @relation(fields: [studentId], references: [id])
+
+  @@index([lessonRecordId, type])
+  @@index([edgeTrackId])
+  @@index([createdAt])
+}
+
+model ClassMinuteAggregate {
+  id             Int      @id @default(autoincrement())
+  lessonRecordId Int
+  classId        Int
+  gradeId        Int
+  schoolId       Int
+  minuteStart    DateTime // 这一分钟的起始时间
+  focusCount     Int      @default(0)
+  handRaiseCount Int      @default(0)
+  writingCount   Int      @default(0)
+  talkingCount   Int      @default(0)
+  sleepingCount  Int      @default(0)
+  phoneCount     Int      @default(0)
+  eatingCount    Int      @default(0)
+  leavingCount   Int      @default(0)
+  totalDetected  Int      @default(0)
+  createdAt      DateTime @default(now())
+
+  lessonRecord LessonRecord @relation(fields: [lessonRecordId], references: [id], onDelete: Cascade)
+
+  @@unique([lessonRecordId, minuteStart])
+  @@index([classId, minuteStart])
+}
+
+model Attendance {
+  id             Int      @id @default(autoincrement())
+  lessonRecordId Int
+  studentId      Int
+  status         String // present, absent, late, early_leave
+  recordedAt     DateTime @default(now())
+
+  lessonRecord LessonRecord @relation(fields: [lessonRecordId], references: [id], onDelete: Cascade)
+  student      Student      @relation(fields: [studentId], references: [id], onDelete: Cascade)
+}
+
+model Leave {
+  id            Int       @id @default(autoincrement())
+  studentId     Int
+  type          String // personal, sick, other
+  reason        String
+  startDate     DateTime
+  endDate       DateTime?
+  status        String    @default("pending") // pending, approved, rejected
+  reviewerId    Int?
+  reviewComment String?
+  createdAt     DateTime  @default(now())
+  reviewedAt    DateTime?
+
+  student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@index([studentId, status])
+}
+
+model Warning {
+  id             Int      @id @default(autoincrement())
+  lessonRecordId Int
+  studentId      Int
+  type           String // discipline, attendance
+  content        String
+  scoreDeduction Float    @default(0)
+  createdAt      DateTime @default(now())
+
+  lessonRecord LessonRecord @relation(fields: [lessonRecordId], references: [id])
+  student      Student      @relation(fields: [studentId], references: [id])
+}
+
+model MyopiaReminder {
+  id             Int       @id @default(autoincrement())
+  lessonRecordId Int?
+  studentId      Int
+  type           String // too_close, too_long, eye_rest
+  rested         Boolean? // 是否按提醒休息（PRD §24.7）：null=未反馈，true=已休息，false=未休息
+  restedAt       DateTime? // 反馈时间
+  createdAt      DateTime  @default(now())
+
+  lessonRecord LessonRecord? @relation(fields: [lessonRecordId], references: [id])
+  student      Student       @relation(fields: [studentId], references: [id])
+}
+
+// ====================
+// 评估相关表
+// ====================
+
+model Evaluation {
+  id             Int      @id @default(autoincrement())
+  lessonRecordId Int
+  studentId      Int
+  score          Float
+  dimensions     Json // 各维度评分
+  emotion        String? // 课堂情绪状态：positive, neutral, negative（PRD §3.28）
+  comment        String?
+  createdAt      DateTime @default(now())
+
+  lessonRecord LessonRecord @relation(fields: [lessonRecordId], references: [id], onDelete: Cascade)
+  student      Student      @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@index([lessonRecordId, studentId])
+}
+
+model StudentProfile {
+  id           Int      @id @default(autoincrement())
+  studentId    Int
+  overallScore Float?
+  rank         Int?
+  trend        Json? // 成绩趋势
+  strengths    String?
+  weaknesses   String?
+  updatedAt    DateTime @updatedAt
+
+  student Student @relation(fields: [studentId], references: [id])
+}
+
+model StudentPreference {
+  id             Int      @id @default(autoincrement())
+  studentId      Int
+  style          String? // serious, gentle, humorous
+  speed          String? // slow, normal, fast
+  myopiaReminder Boolean  @default(true)
+  updatedAt      DateTime @updatedAt
+
+  student Student @relation(fields: [studentId], references: [id])
+}
+
+// ====================
+// 学生预警（PRD §3.10）
+// ====================
+
+model StudentAlert {
+  id        Int       @id @default(autoincrement())
+  studentId Int
+  schoolId  Int
+  type      String // score_drop 成绩下滑, absence 连续缺课, discipline 纪律频发, attendance 出勤异常
+  level     String    @default("warning") // info, warning, critical
+  title     String
+  content   String
+  metrics   Json? // 触发时的量化指标（如 recentAvg/earlierAvg/delta）
+  status    String    @default("open") // open, handled, ignored
+  handledBy Int?
+  handledAt DateTime?
+  createdAt DateTime  @default(now())
+
+  student Student @relation(fields: [studentId], references: [id], onDelete: Cascade)
+
+  @@index([schoolId, status])
+  @@index([studentId, type, createdAt])
+}
+
+// ====================
+// 订阅/商务相关表
+// ====================
+
+model Subscription {
+  id        Int      @id @default(autoincrement())
+  schoolId  Int
+  plan      String // basic, pro, enterprise
+  startDate DateTime
+  endDate   DateTime
+  status    String   @default("active") // active, expired, cancelled
+  amount    Float?
+  createdAt DateTime @default(now())
+
+  school School? @relation(fields: [schoolId], references: [id], onDelete: Cascade)
+}
+
+model UsageLog {
+  id        Int      @id @default(autoincrement())
+  schoolId  Int?
+  type      String // llm_api, storage, bandwidth, tutoring
+  amount    Float
+  unit      String // tokens, MB, hours
+  createdAt DateTime @default(now())
+
+  school School? @relation(fields: [schoolId], references: [id], onDelete: SetNull)
+}
+
+// ====================
+// 分享相关表
+// ====================
+
+model ShareSnapshot {
+  id           Int      @id @default(autoincrement())
+  type         String // student, class, grade, school
+  targetId     Int
+  content      Json // 快照数据
+  visitorCount Int      @default(0)
+  createdAt    DateTime @default(now())
+
+  leads Lead[]
+}
+
+model Lead {
+  id              Int      @id @default(autoincrement())
+  shareSnapshotId Int?
+  name            String?
+  phone           String?
+  company         String?
+  message         String?
+  createdAt       DateTime @default(now())
+
+  shareSnapshot ShareSnapshot? @relation(fields: [shareSnapshotId], references: [id])
+}
+
+// ====================
+// 问卷相关表
+// ====================
+
+model Survey {
+  id        Int      @id @default(autoincrement())
+  title     String
+  questions Json
+  status    String   @default("active")
+  createdAt DateTime @default(now())
+
+  surveyResponses SurveyResponse[]
+}
+
+model SurveyResponse {
+  id        Int      @id @default(autoincrement())
+  surveyId  Int
+  parentId  Int?
+  answers   Json
+  createdAt DateTime @default(now())
+
+  survey Survey  @relation(fields: [surveyId], references: [id])
+  parent Parent? @relation(fields: [parentId], references: [id])
+}
+
+// ====================
+// 通知相关表
+// ====================
+
+model Notification {
+  id        Int      @id @default(autoincrement())
+  studentId Int?
+  userId    Int?
+  type      String // warning, homework, exam, message
+  title     String
+  content   String
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  student Student? @relation(fields: [studentId], references: [id])
+}
+
+// ====================
+// 辅导相关表
+// ====================
+
+model TutoringSession {
+  id        Int       @id @default(autoincrement())
+  studentId Int
+  agentId   Int?
+  status    String    @default("active") // active, ended
+  startedAt DateTime  @default(now())
+  endedAt   DateTime?
+
+  student          Student           @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  agent            Agent?            @relation(fields: [agentId], references: [id])
+  tutoringMessages TutoringMessage[]
+  practiceRecords  PracticeRecord[]
+
+  @@index([studentId])
+}
+
+model TutoringMessage {
+  id        Int      @id @default(autoincrement())
+  sessionId Int
+  role      String // student, assistant
+  content   String
+  createdAt DateTime @default(now())
+
+  session TutoringSession @relation(fields: [sessionId], references: [id])
+}
+
+model PracticeRecord {
+  id            Int      @id @default(autoincrement())
+  sessionId     Int
+  subject       String
+  // 学科专项练习类型（PRD §3.19）：reading(朗读打卡), dictation(默写),
+  // oral(口语跟读), spelling(单词听写)；tutoring 自由问答留空/general
+  practiceType  String?
+  question      String
+  userAnswer    String
+  correctAnswer String
+  isCorrect     Boolean?
+  createdAt     DateTime @default(now())
+
+  session TutoringSession @relation(fields: [sessionId], references: [id])
+
+  @@index([sessionId, practiceType])
+  @@index([practiceType, createdAt])
+}
+
+// ====================
+// 设备管理表
+// ====================
+
+model Device {
+  id           Int      @id @default(autoincrement())
+  boxId        Int?
+  schoolId     Int
+  type         String // camera, microphone, glasses, watch, help_key
+  model        String?
+  serialNumber String   @unique
+  status       String   @default("offline")
+  studentId    Int? // 穿戴设备绑定的学生
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  box     Box?     @relation(fields: [boxId], references: [id])
+  student Student? @relation(fields: [studentId], references: [id])
+}
+
+// ====================
+// 辅导服务订阅（按学生开通）
+// ====================
+
+model TutoringSubscription {
+  id              Int      @id @default(autoincrement())
+  studentId       Int      @unique
+  plan            String   @default("standard")
+  status          String   @default("active")
+  startDate       DateTime @default(now())
+  endDate         DateTime
+  glassesDeviceId Int?
+  watchDeviceId   Int?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+
+  student Student @relation(fields: [studentId], references: [id])
+}
+
+// ====================
+// 数字人形象
+// ====================
+
+model DigitalAvatar {
+  id         Int      @id @default(autoincrement())
+  name       String
+  gender     String?
+  subject    String?
+  modelType  String   @default("2d")
+  modelUrl   String?
+  previewUrl String?
+  isCustom   Boolean  @default(false)
+  schoolId   Int?
+  price      Float?
+  status     String   @default("active")
+  createdAt  DateTime @default(now())
+}
+
+// ====================
+// 人脸库相关表
+// ====================
+
+model FacePhoto {
+  id            Int      @id @default(autoincrement())
+  studentId     Int
+  student       Student  @relation(fields: [studentId], references: [id], onDelete: Cascade)
+  photoUrl      String // MinIO 存储的人脸照片URL
+  featureVector String? // 盒子端提取的128维特征向量(JSON数组)，回传后存储
+  status        String   @default("pending") // pending待处理, processed已提取特征, failed失败, synced已下发盒子
+  boxId         Int? // 下发到哪个教室盒子
+  uploadedBy    Int? // 上传者用户ID
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@index([studentId])
+  @@index([status])
+}
+
+// ====================
+// 官网配置（单行，id=1）
+// ====================
+
+model SiteConfig {
+  id            Int      @id @default(autoincrement())
+  icpNo         String? // ICP 备案号（未备案留空，官网页脚隐藏备案位）
+  contactPhone  String? // 咨询电话
+  workHours     String? // 工作时间
+  wechatName    String? // 微信公众号名称
+  qrCodeUrl     String? // 微信二维码图片URL（MinIO/外部地址）
+  schoolsCount  String?  @default("10+") // 数据背书：已服务学校数
+  studentsCount String?  @default("5,000+") // 数据背书：覆盖学生数
+  costSave      String?  @default("60%") // 数据背书：节支成本
+  updatedAt     DateTime @updatedAt
+}
+
+// ====================
+// 官网转化埋点
+// ====================
+
+model TrackingEvent {
+  id          Int      @id @default(autoincrement())
+  event       String // pageview, lead_submit
+  page        String?
+  referrer    String?
+  utmSource   String?
+  utmMedium   String?
+  utmCampaign String?
+  meta        Json?
+  createdAt   DateTime @default(now())
+
+  @@index([event])
+  @@index([createdAt])
+}

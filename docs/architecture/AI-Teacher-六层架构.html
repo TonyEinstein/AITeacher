@@ -1,0 +1,204 @@
+<html style="margin:0;padding:0;">
+<title>AI Teacher 六层架构 v2.1（对齐 PRD v1.0 · 云 SaaS）</title>
+<div style="width:100%;box-sizing:border-box;font-family:'Segoe UI','Microsoft YaHei',sans-serif;background:#f5f7fa;padding:24px;">
+  <div style="max-width:1140px;margin:0 auto;">
+
+    <div style="text-align:center;margin-bottom:6px;">
+      <div style="font-size:22px;font-weight:700;color:#1f3a5f;">AI Teacher 六层架构 v2.1</div>
+      <div style="font-size:13px;color:#6b7a90;margin-top:4px;">核心 IP 在云端 · 学校端只装瘦客户端 · 断网核心智能不可用（按预热稿讲完）· Agent 严格受管理员职责约束</div>
+      <div style="font-size:11.5px;color:#b23030;margin-top:4px;">▲ 本文按 PRD v1.0（§4.1/§4.2/§4.6/§4.7）修订：删除本地 LLM/Ollama、本地 SQLite、离线断网照常用等与 PRD 冲突的旧 v2 内容</div>
+    </div>
+
+    <!-- 最原则：角色治理横条 -->
+    <div style="max-width:1140px;margin:14px auto;background:#fff5f5;border:2px solid #e05555;border-radius:10px;padding:12px 16px;">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <div style="font-size:18px;">🛡</div>
+        <div style="flex:1;">
+          <div style="font-size:14.5px;font-weight:700;color:#b23030;">最原则：Agent 角色治理护栏（贯穿 L2 与 L3）</div>
+          <div style="font-size:12px;color:#8a4040;margin-top:3px;">管理员（学校端）为每个 Agent 定义：教哪个班、哪一科、什么年级、能调用什么工具、能对学生说什么/不能说什么。上课与辅导全程在该角色内运行，越权行为被拦截并记日志；Agent 角色配置与提示词本体存云端，学校端不可见。</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;font-size:11.5px;">
+        <div style="background:#fff;border:1px solid #f0b0b0;border-radius:5px;padding:5px 9px;color:#b23030;">角色 System Prompt 锁定（云端）</div>
+        <div style="background:#fff;border:1px solid #f0b0b0;border-radius:5px;padding:5px 9px;color:#b23030;">工具/API 调用白名单</div>
+        <div style="background:#fff;border:1px solid #f0b0b0;border-radius:5px;padding:5px 9px;color:#b23030;">数据访问范围（只能看本班）</div>
+        <div style="background:#fff;border:1px solid #f0b0b0;border-radius:5px;padding:5px 9px;color:#b23030;">越权输出拦截</div>
+        <div style="background:#fff;border:1px solid #f0b0b0;border-radius:5px;padding:5px 9px;color:#b23030;">行为全程审计日志</div>
+      </div>
+    </div>
+
+    <div style="display:flex;gap:16px;align-items:stretch;flex-wrap:wrap;margin-top:6px;">
+
+      <!-- 左侧主栈 -->
+      <div style="flex:2.2;min-width:560px;display:flex;flex-direction:column;gap:0;">
+
+        <!-- L1 展现层 -->
+        <div style="background:#e3edfb;border:2px solid #3b7dd8;border-radius:10px 10px 0 0;padding:11px 16px;border-bottom:none;">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div><span style="font-size:12px;font-weight:700;color:#fff;background:#3b7dd8;padding:2px 8px;border-radius:4px;">L1</span>
+            <span style="font-size:15px;font-weight:700;color:#1f3a5f;margin-left:8px;">展现层</span></div>
+            <div style="font-size:11px;color:#1f5aa8;background:#d6e6fb;padding:3px 8px;border-radius:10px;">教室端 Electron（树莓派5）· 后台 · 小程序 · 官网</div>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:9px;flex-wrap:wrap;font-size:12px;color:#3a4a60;">
+            <div style="flex:1;min-width:150px;background:#fff;border:1px solid #c5d9f2;border-radius:6px;padding:7px;">🖥 <b>教室端（Electron 跑树莓派5）</b><br><span style="color:#6b7a90;">小盒子=客户端，本地渲染数字人/PPT，本地跑视觉+ASR</span></div>
+            <div style="flex:1;min-width:150px;background:#fff;border:1px solid #c5d9f2;border-radius:6px;padding:7px;">🌐 <b>Web 管理后台</b><br><span style="color:#6b7a90;">学校排课/花名册/报表 + 你的总部云后台</span></div>
+            <div style="flex:1;min-width:150px;background:#fff;border:1px solid #c5d9f2;border-radius:6px;padding:7px;">📱 <b>微信小程序 + 官网</b><br><span style="color:#6b7a90;">学生/家长/教师三模式；官网留资获客</span></div>
+          </div>
+        </div>
+        <div style="text-align:center;color:#3b7dd8;line-height:1;padding:2px 0;">▲ ▼</div>
+
+        <!-- L2 业务应用层 -->
+        <div style="background:#e8ecfb;border:2px solid #5b6fd8;border-radius:10px;padding:11px 16px;border-bottom:none;">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div><span style="font-size:12px;font-weight:700;color:#fff;background:#5b6fd8;padding:2px 8px;border-radius:4px;">L2</span>
+            <span style="font-size:15px;font-weight:700;color:#2a3580;margin-left:8px;">业务应用层 / Agent 核心（云端）</span></div>
+            <div style="font-size:11px;color:#4a57b8;">课堂 Agent 一班一科一个 · 辅导 Agent 一人一实例</div>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(155px,1fr));gap:7px;margin-top:9px;font-size:11.5px;color:#3a4490;">
+            <div style="background:#fff;border:1px solid #c9cff0;border-radius:6px;padding:7px;">📚 <b>课堂教学 Agent</b><br><span style="color:#6a6f90;">定时上课、教案、点名</span></div>
+            <div style="background:#fff;border:1px solid #c9cff0;border-radius:6px;padding:7px;">🤝 <b>辅导答疑 Agent</b><br><span style="color:#6a6f90;">云端多实例，一人一实例</span></div>
+            <div style="background:#fff;border:1px solid #c9cff0;border-radius:6px;padding:7px;">🗂 <b>课程规划引擎</b><br><span style="color:#6a6f90;">教材→大纲→进度→教案</span></div>
+            <div style="background:#fff;border:1px solid #c9cff0;border-radius:6px;padding:7px;">🧑‍🏫 <b>考勤纪律中心</b><br><span style="color:#6a6f90;">请假过滤、提问前校验</span></div>
+            <div style="background:#fff;border:1px solid #c9cff0;border-radius:6px;padding:7px;">📊 <b>评估报表中心</b><br><span style="color:#6a6f90;">每课打分、历史综合</span></div>
+          </div>
+        </div>
+        <div style="text-align:center;color:#5b6fd8;line-height:1;padding:2px 0;">▲ ▼</div>
+
+        <!-- L3 AI 能力层 -->
+        <div style="background:#fff3e0;border:2px solid #f0a04b;border-radius:10px;padding:11px 16px;border-bottom:none;">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div><span style="font-size:12px;font-weight:700;color:#fff;background:#e08a2e;padding:2px 8px;border-radius:4px;">L3</span>
+            <span style="font-size:15px;font-weight:700;color:#8a5a10;margin-left:8px;">AI 能力服务层（云端为主，教室端跑本地重活）</span></div>
+            <div style="font-size:11px;color:#c47a1e;">API Key 由你后台配置，学校端碰不到</div>
+          </div>
+          <div style="display:flex;gap:8px;margin-top:9px;align-items:stretch;">
+            <div style="flex:1;background:#fff;border:1.5px solid #f0a04b;border-radius:6px;padding:8px;">
+              <div style="font-size:12px;font-weight:700;color:#b06a10;">☁ 云端（核心 IP，不外露）</div>
+              <div style="font-size:11px;color:#8a7050;margin-top:4px;line-height:1.7;">
+                · LLM 统一走第三方 API（你后台配 Key）<br>
+                · Skill 规则引擎/教学流程/Agent 提示词<br>
+                · 教案/PPT/讲稿生成、作业批改、辅导<br>
+                · 订阅鉴权、多租户、计费
+              </div>
+            </div>
+            <div style="display:flex;align-items:center;justify-content:center;font-size:18px;color:#e08a2e;font-weight:700;">⇄</div>
+            <div style="flex:1;background:#fff;border:1.5px solid #2fb587;border-radius:6px;padding:8px;">
+              <div style="font-size:12px;font-weight:700;color:#1d8a63;">📦 教室端本地（省上行/省 API 费）</div>
+              <div style="font-size:11px;color:#3a7a60;margin-top:4px;line-height:1.7;">
+                · 本地 Whisper ASR（语音转文字，只传文本）<br>
+                · 本地 piper/边缘 TTS（开口讲课）<br>
+                · 本地 ONNX/OpenCV 视觉（举手/违纪识别）<br>
+                · 数字人/PPT 本地渲染（云端只发指令）
+              </div>
+            </div>
+          </div>
+          <div style="font-size:11px;color:#8a7050;margin-top:6px;text-align:center;">课中摄像头只上传结构化事件，不传视频流上云；仅家长在线看课时推一路直播流到云端 SRS 转播</div>
+        </div>
+        <div style="text-align:center;color:#f0a04b;line-height:1;padding:2px 0;">▲ ▼</div>
+
+        <!-- L4 IoT 网关层 -->
+        <div style="background:#e0f5ec;border:2.5px solid #1fa876;border-radius:10px;padding:11px 16px;border-bottom:none;box-shadow:0 0 0 3px rgba(31,168,118,0.12);">
+          <div style="display:flex;justify-content:space-between;align-items:center;">
+            <div><span style="font-size:12px;font-weight:700;color:#fff;background:#1fa876;padding:2px 8px;border-radius:4px;">L4</span>
+            <span style="font-size:15px;font-weight:700;color:#0f6b48;margin-left:8px;">IoT 设备网关层 ★</span></div>
+            <div style="font-size:11px;color:#0f6b48;background:#c8eed8;padding:3px 8px;border-radius:10px;">多路音视频并发 · 硬件唯一出入口</div>
+          </div>
+          <div style="display:flex;gap:7px;margin-top:9px;flex-wrap:wrap;font-size:11.5px;color:#0f6b48;">
+            <div style="flex:1;min-width:120px;background:#fff;border:1px solid #a8e0c8;border-radius:6px;padding:6px;">🔍 设备发现配对</div>
+            <div style="flex:1;min-width:120px;background:#fff;border:1px solid #a8e0c8;border-radius:6px;padding:6px;">📡 多路流并发接入</div>
+            <div style="flex:1;min-width:120px;background:#fff;border:1px solid #a8e0c8;border-radius:6px;padding:6px;">🔌 协议适配（BLE/USB/Wi-Fi）</div>
+            <div style="flex:1;min-width:120px;background:#fff;border:1px solid #a8e0c8;border-radius:6px;padding:6px;">📶 状态管理与重连</div>
+          </div>
+        </div>
+        <div style="text-align:center;color:#1fa876;line-height:1;padding:2px 0;">▲ ▼</div>
+
+        <!-- L5 设备层 -->
+        <div style="background:#eef0f3;border:2px solid #7a8699;border-radius:10px 10px 0 0;padding:11px 16px;">
+          <div><span style="font-size:12px;font-weight:700;color:#fff;background:#7a8699;padding:2px 8px;border-radius:4px;">L5</span>
+          <span style="font-size:15px;font-weight:700;color:#3a4556;margin-left:8px;">设备感知层</span></div>
+          <div style="display:flex;gap:7px;margin-top:9px;flex-wrap:wrap;font-size:11.5px;color:#3a4556;">
+            <div style="flex:1;min-width:110px;background:#fff;border:1px solid #c8d0db;border-radius:6px;padding:6px;">📷 教室主摄像头</div>
+            <div style="flex:1;min-width:110px;background:#fff;border:1px solid #c8d0db;border-radius:6px;padding:6px;">🎤 麦克风阵列</div>
+            <div style="flex:1;min-width:110px;background:#fff;border:1px solid #c8d0db;border-radius:6px;padding:6px;">👓 学生眼镜</div>
+            <div style="flex:1;min-width:110px;background:#fff;border:1px solid #c8d0db;border-radius:6px;padding:6px;">⌚ 手表/耳机</div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- 右侧横切 -->
+      <div style="flex:1;min-width:270px;display:flex;flex-direction:column;gap:11px;">
+
+        <div style="background:#f0f7ff;border:2px solid #4a90d9;border-radius:10px;padding:11px 13px;">
+          <div style="font-size:13px;font-weight:700;color:#2a6bb0;">🗄 L6 数据持久层 · 云端（PRD §4.1）</div>
+          <div style="font-size:11px;color:#4a6a90;margin:4px 0 7px;">学生档案/教材/课表/行为日志/评估历史全部在云端；学校端只缓存 PPT+讲稿</div>
+          <div style="display:flex;flex-direction:column;gap:5px;font-size:11.5px;color:#3a5a80;">
+            <div style="background:#fff;border:1px solid #b8d4f0;border-radius:5px;padding:5px 8px;">PostgreSQL（腾讯云托管）</div>
+            <div style="background:#fff;border:1px solid #b8d4f0;border-radius:5px;padding:5px 8px;">Redis（自建 Docker）</div>
+            <div style="background:#fff;border:1px solid #b8d4f0;border-radius:5px;padding:5px 8px;">MinIO 对象存储（教材/录像）</div>
+            <div style="background:#fff;border:1px solid #b8d4f0;border-radius:5px;padding:5px 8px;">SRS 流媒体（家长看课转流）</div>
+            <div style="background:#fff7e6;border:1px dashed #f0a04b;border-radius:5px;padding:5px 8px;">☁ 学校端只缓存当节课课件包（课前下发）</div>
+          </div>
+        </div>
+
+        <div style="background:#fff;border:2px solid #d0d7e2;border-radius:10px;padding:11px 13px;">
+          <div style="font-size:13px;font-weight:700;color:#4a5568;">⚙ 横切基础能力</div>
+          <div style="display:flex;flex-direction:column;gap:5px;font-size:11.5px;color:#4a5568;margin-top:7px;">
+            <div style="background:#f7f9fc;border:1px solid #e2e8f0;border-radius:5px;padding:5px 8px;">API Key 与密钥加密（仅云端）</div>
+            <div style="background:#f7f9fc;border:1px solid #e2e8f0;border-radius:5px;padding:5px 8px;">日志与审计（含越权行为）</div>
+            <div style="background:#f7f9fc;border:1px solid #e2e8f0;border-radius:5px;padding:5px 8px;">多角色权限（总部 Super/学校管理员/老师/学生/家长）</div>
+            <div style="background:#f7f9fc;border:1px solid #e2e8f0;border-radius:5px;padding:5px 8px;">隐私合规（数据归学校，云端加密存储）</div>
+          </div>
+        </div>
+
+        <div style="background:#fff;border:2px solid #e05555;border-radius:10px;padding:11px 13px;">
+          <div style="font-size:13px;font-weight:700;color:#b23030;">🔒 管理员职责分配示例</div>
+          <div style="font-size:11.5px;color:#7a4040;line-height:1.8;margin-top:5px;">
+            管理员（学校端）在后台为 Agent 打标签：<br>
+            <b>学科</b>：小学数学 / 英语…<br>
+            <b>班级</b>：三年级2班<br>
+            <b>可用工具</b>：点名、提问、打分（不可调财务、不可看别班）<br>
+            <b>行为禁区</b>：不评判外貌、不聊与课业无关话题、不给医疗/升学承诺<br>
+            越权 → 立即拦截 + 记录 + 通知管理员
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- PRD 关键约束落地 -->
+    <div style="margin-top:16px;background:#fff;border:1px solid #d8e0ec;border-radius:10px;padding:13px 16px;">
+      <div style="font-size:14px;font-weight:700;color:#1f3a5f;margin-bottom:8px;">PRD v1.0 关键约束分别落在哪一层</div>
+      <table style="width:100%;border-collapse:collapse;font-size:12px;color:#3a4556;">
+        <thead><tr style="background:#eef2f8;">
+          <th style="padding:7px;border:1px solid #d8e0ec;text-align:left;">PRD 约束</th>
+          <th style="padding:7px;border:1px solid #d8e0ec;text-align:left;">落在哪层</th>
+          <th style="padding:7px;border:1px solid #d8e0ec;text-align:left;">怎么落地</th>
+        </tr></thead>
+        <tbody>
+          <tr>
+            <td style="padding:7px;border:1px solid #d8e0ec;"><b>核心 IP 永不落地</b></td>
+            <td style="padding:7px;border:1px solid #d8e0ec;">L3 云端 + L6</td>
+            <td style="padding:7px;border:1px solid #d8e0ec;">Agent 提示词/Skill 规则/教学流程只存云端；教室端只装"加壳"客户端，启动需在线鉴权</td>
+          </tr>
+          <tr>
+            <td style="padding:7px;border:1px solid #d8e0ec;"><b>断网降级</b></td>
+            <td style="padding:7px;border:1px solid #d8e0ec;">L1 教室端</td>
+            <td style="padding:7px;border:1px solid #d8e0ec;">课前下发当节课件包；断网只能按预热稿讲完，即兴互动降级，不能离线照常上课</td>
+          </tr>
+          <tr>
+            <td style="padding:7px;border:1px solid #d8e0ec;"><b>多人并发</b></td>
+            <td style="padding:7px;border:1px solid #d8e0ec;">L2 多 Agent + L4 多路流</td>
+            <td style="padding:7px;border:1px solid #d8e0ec;">课堂 Agent 一班一科一个，辅导 Agent 一人一个实例并行；L4 同时收多路音视频流</td>
+          </tr>
+          <tr>
+            <td style="padding:7px;border:1px solid #d8e0ec;"><b>数据归学校/云端存储</b></td>
+            <td style="padding:7px;border:1px solid #d8e0ec;">L6 云端</td>
+            <td style="padding:7px;border:1px solid #d8e0ec;">学生数据云端 PostgreSQL 存储、归学校所有；摄像头只传结构化事件，不传视频流上云</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>

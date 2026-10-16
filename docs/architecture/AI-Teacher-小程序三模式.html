@@ -1,0 +1,103 @@
+<html style="margin:0;padding:0;">
+<title>AI Teacher 小程序三模式：学生/家长/教师</title>
+<div style="width:100%;box-sizing:border-box;font-family:'Segoe UI','Microsoft YaHei',sans-serif;background:#f5f7fa;padding:24px;">
+  <div style="max-width:1100px;margin:0 auto;">
+
+    <div style="text-align:center;margin-bottom:16px;">
+      <div style="font-size:22px;font-weight:700;color:#1f3a5f;">小程序三种模式 · 各看各的</div>
+      <div style="font-size:13px;color:#6b7a90;margin-top:5px;">同一个小程序，登录后按身份进不同视图 · 家长能实时看自己孩子上课</div>
+    </div>
+
+    <!-- 实时看课数据流 -->
+    <div style="background:#e0f5ec;border:2px solid #1fa876;border-radius:12px;padding:14px;margin-bottom:14px;">
+      <div style="font-size:14.5px;font-weight:700;color:#0f6b48;">📡 家长/老师实时看课的数据流</div>
+      <div style="font-size:11.5px;color:#3a7a60;margin:6px 0 10px;">家长在线看课时，教室端推一路直播流 → 云端 SRS 转成小程序能播的流 → 家长/老师手机打开就看（PRD §4.6②）</div>
+      <div style="display:flex;gap:6px;align-items:stretch;flex-wrap:wrap;font-size:12px;">
+        <div style="flex:1;min-width:120px;background:#fff;border:1px solid #7fd0b0;border-radius:8px;padding:8px;text-align:center;">
+          <b style="color:#0f6b48;">📷 教室摄像头</b><br><span style="color:#3a7a60;font-size:11px;">拍全班 + 上课画面（本地识别，只传事件）</span>
+        </div>
+        <div style="display:flex;align-items:center;color:#1fa876;">→</div>
+        <div style="flex:1.2;min-width:150px;background:#fff3e0;border:1px solid #f0c070;border-radius:8px;padding:8px;text-align:center;">
+          <b style="color:#b06a10;">☁ 云端 SRS 转流</b><br><span style="color:#8a6a30;font-size:11px;">仅看课时推流，把教室流转成小程序能播的格式，按账号鉴权</span>
+        </div>
+        <div style="display:flex;align-items:center;color:#e08a2e;">→</div>
+        <div style="flex:1.2;min-width:150px;background:#eef2ff;border:1px solid #aab3e8;border-radius:8px;padding:8px;text-align:center;">
+          <b style="color:#3a4490;">📱 小程序</b><br><span style="color:#5a5f90;font-size:11px;">家长只能看自己孩子那间教室；老师看自己班</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 三模式对照 -->
+    <div style="display:flex;gap:12px;flex-wrap:wrap;">
+
+      <!-- 学生模式 -->
+      <div style="flex:1;min-width:280px;background:#eef2ff;border:2px solid #5b6fd8;border-radius:12px;padding:14px;">
+        <div style="font-size:14px;font-weight:700;color:#3a4490;text-align:center;">🎒 学生模式</div>
+        <div style="font-size:11px;color:#5a5f90;text-align:center;margin:4px 0 10px;">主角：完成作业 + 看自己表现</div>
+        <div style="font-size:12px;color:#3a4490;line-height:2;">
+          ✅ 看自己今天/本周作业<br>
+          ✅ 拍照提交作业<br>
+          ✅ 看作业批改结果和评语<br>
+          ✅ 看自己的课堂表现分、综合评分<br>
+          ✅ 看自己的上课进度、考勤记录<br>
+          ✅ 申请请假<br>
+          ✅ 看辅导答疑历史<br>
+          ❌ 看不到别人<br>
+          ❌ 看不到别的学生成绩
+        </div>
+      </div>
+
+      <!-- 家长模式 -->
+      <div style="flex:1;min-width:280px;background:#e0f5ec;border:2px solid #1fa876;border-radius:12px;padding:14px;">
+        <div style="font-size:14px;font-weight:700;color:#0f6b48;text-align:center;">👨‍👩‍👧 家长模式</div>
+        <div style="font-size:11px;color:#3a7a60;text-align:center;margin:4px 0 10px;">主角：看自己孩子的上课和表现</div>
+        <div style="font-size:12px;color:#14694a;line-height:2;">
+          ✅ <b>实时看课</b>：孩子所在教室的直播画面<br>
+          ✅ 看上课内容（PPT/讲了什么）<br>
+          ✅ 看孩子实时状态（在不在、举没举手）<br>
+          ✅ 看孩子的课堂表现分、综合评分<br>
+          ✅ 看孩子在班级/年级的排名<br>
+          ✅ 看作业完成情况、批改结果<br>
+          ✅ 看考勤（迟到/旷课/请假记录）<br>
+          ✅ 看历史趋势图（最近成绩涨跌）<br>
+          ❌ 只能看自己绑定的孩子<br>
+          ❌ 看不到别的孩子的个人信息
+        </div>
+      </div>
+
+      <!-- 教师/管理员模式 -->
+      <div style="flex:1;min-width:280px;background:#fff3e0;border:2px solid #e08a2e;border-radius:12px;padding:14px;">
+        <div style="font-size:14px;font-weight:700;color:#b06a10;text-align:center;">🧑‍🏫 教师/管理员模式</div>
+        <div style="font-size:11px;color:#8a6a30;text-align:center;margin:4px 0 10px;">主角：管自己班/自己科，移动轻管理</div>
+        <div style="font-size:12px;color:#8a5a10;line-height:2;">
+          ✅ <b>全班实时看课</b>：自己班的教室画面<br>
+          ✅ 看全班考勤（谁迟到/旷课/请假）<br>
+          ✅ 看全班纪律记录（谁被警告过）<br>
+          ✅ 看全班作业批改进度、待审批列表<br>
+          ✅ 审批学生请假申请（手机上点一下）<br>
+          ✅ 看全班成绩分布、排名表<br>
+          ✅ 看每个学生的个人评估报告<br>
+          ✅ Super 管理员（你/总部）可跨校查看<br>
+          ⚠ 重操作（排课/传教材/配规则）仍去Web后台
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 关键设计点 -->
+    <div style="background:#fff;border:1.5px solid #d8e0ec;border-radius:12px;padding:14px;margin-top:14px;">
+      <div style="font-size:14px;font-weight:700;color:#1f3a5f;margin-bottom:8px;">这个功能必须守住的两条线</div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;font-size:12px;">
+        <div style="flex:1;min-width:250px;background:#fff0f0;border:1px solid #e8a0a0;border-radius:8px;padding:9px;">
+          <b style="color:#b23030;">🔒 隐私边界</b><br>
+          <span style="color:#8a4040;line-height:1.8;">家长账号必须先绑定"我是哪个孩子的家长"，绑几个孩子就能看几个，看不到别人。服务器在转流时按账号鉴权，不是打开就能看所有教室。</span>
+        </div>
+        <div style="flex:1;min-width:250px;background:#fff8ec;border:1px solid #f0d090;border-radius:8px;padding:9px;">
+          <b style="color:#b06a10;">⚡ 技术现实</b><br>
+          <span style="color:#8a6a30;line-height:1.8;">实时看课要额外占服务器带宽和转流性能。建议：直播只在上课时间段开，不是全天录像；家长看的是"教室全景+上课画面"，不单独给每个学生开特写。</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,141 @@
+<html style="margin:0;padding:0;">
+<title>AI Teacher 组织权限 · 学期排课 · 作业流程</title>
+<div style="width:100%;box-sizing:border-box;font-family:'Segoe UI','Microsoft YaHei',sans-serif;background:#f5f7fa;padding:24px;">
+  <div style="max-width:1140px;margin:0 auto;">
+
+    <div style="text-align:center;margin-bottom:18px;">
+      <div style="font-size:22px;font-weight:700;color:#1f3a5f;">组织权限 · 学期排课 · 作业下发</div>
+      <div style="font-size:13px;color:#6b7a90;margin-top:5px;">一班一科一个授课 Agent · 辅导用全能 Agent · 作业经小程序流转 · 学期日历驱动自动上课</div>
+    </div>
+
+    <!-- 第一部分：组织与 Agent 分配 -->
+    <div style="background:#fff;border:1.5px solid #d8e0ec;border-radius:12px;padding:16px;margin-bottom:14px;">
+      <div style="font-size:15px;font-weight:700;color:#1f3a5f;margin-bottom:4px;">① 组织与 Agent 分配（你的管理结构）</div>
+      <div style="font-size:12px;color:#6b7a90;margin-bottom:14px;">总部 Super 管理员 → 学校管理员 → 按"年级×科目"管理员 → 管本班本科 Agent</div>
+
+      <div style="display:flex;justify-content:center;margin-bottom:8px;">
+        <div style="background:#b23030;color:#fff;border-radius:10px;padding:10px 22px;text-align:center;box-shadow:0 2px 6px rgba(178,48,48,0.3);">
+          <div style="font-size:13px;font-weight:700;">👑 Super 管理员（你/总部）</div>
+          <div style="font-size:11px;opacity:0.9;margin-top:2px;">跨校云后台：开通/停用学校订阅 · 看全校用量 · 创建学校管理员 · 配置 LLM API Key（学校端不可见）</div>
+        </div>
+      </div>
+      <div style="text-align:center;color:#b23030;font-size:16px;">│</div>
+
+      <div style="display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-bottom:8px;">
+        <div style="background:#fff0f0;border:1.5px solid #e07070;border-radius:8px;padding:8px 14px;text-align:center;">
+          <div style="font-size:12px;font-weight:700;color:#b23030;">🏫 学校管理员（本校最高权限）</div>
+        </div>
+      </div>
+      <div style="text-align:center;color:#e07070;font-size:15px;">│ 本校排课/教材/花名册/报表</div>
+
+      <div style="display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-bottom:8px;">
+        <div style="background:#fff0f0;border:1.5px solid #e07070;border-radius:8px;padding:8px 14px;text-align:center;">
+          <div style="font-size:12px;font-weight:700;color:#b23030;">高一·语文 管理员</div>
+        </div>
+        <div style="background:#fff0f0;border:1.5px solid #e07070;border-radius:8px;padding:8px 14px;text-align:center;">
+          <div style="font-size:12px;font-weight:700;color:#b23030;">高一·数学 管理员</div>
+        </div>
+        <div style="background:#fff0f0;border:1.5px solid #e07070;border-radius:8px;padding:8px 14px;text-align:center;">
+          <div style="font-size:12px;font-weight:700;color:#b23030;">高二·语文 管理员</div>
+        </div>
+        <div style="background:#fff0f0;border:1.5px solid #e07070;border-radius:8px;padding:8px 14px;text-align:center;">
+          <div style="font-size:12px;font-weight:700;color:#b23030;">…按年级×科目配齐</div>
+        </div>
+      </div>
+      <div style="text-align:center;color:#e07070;font-size:15px;">│ 每人只管自己年级本科</div>
+
+      <div style="display:flex;justify-content:center;gap:8px;flex-wrap:wrap;">
+        <div style="background:#eef2ff;border:1.5px solid #5b6fd8;border-radius:8px;padding:8px 12px;text-align:center;min-width:130px;">
+          <div style="font-size:12px;font-weight:700;color:#3a4490;">🤖 高一1班·语文 Agent</div>
+        </div>
+        <div style="background:#eef2ff;border:1.5px solid #5b6fd8;border-radius:8px;padding:8px 12px;text-align:center;min-width:130px;">
+          <div style="font-size:12px;font-weight:700;color:#3a4490;">🤖 高一2班·语文 Agent</div>
+        </div>
+        <div style="background:#eef2ff;border:1.5px solid #5b6fd8;border-radius:8px;padding:8px 12px;text-align:center;min-width:130px;">
+          <div style="font-size:12px;font-weight:700;color:#3a4490;">🤖 高一1班·数学 Agent</div>
+        </div>
+        <div style="background:#eef2ff;border:1.5px solid #5b6fd8;border-radius:8px;padding:8px 12px;text-align:center;min-width:130px;">
+          <div style="font-size:12px;font-weight:700;color:#3a4490;">🤖 高一2班·数学 Agent</div>
+        </div>
+        <div style="background:#e8f7f1;border:1.5px solid #1fa876;border-radius:8px;padding:8px 12px;text-align:center;min-width:130px;">
+          <div style="font-size:12px;font-weight:700;color:#0f6b48;">🌟 全能辅导 Agent（跨科目）</div>
+        </div>
+      </div>
+      <div style="text-align:center;color:#7a8699;font-size:12px;margin-top:8px;">↑ 授课 Agent：一班一科一个，按自己课表上课互不冲突 ｜ 辅导 Agent：云端多实例并发，一人一实例，随身答疑跨科目</div>
+    </div>
+
+    <!-- 第二部分：学期日历→自动排课→到点上课 -->
+    <div style="background:#fff;border:1.5px solid #d8e0ec;border-radius:12px;padding:16px;margin-bottom:14px;">
+      <div style="font-size:15px;font-weight:700;color:#1f3a5f;margin-bottom:4px;">② 学期日历 → AI 自动排课 → 到点上课</div>
+      <div style="font-size:12px;color:#6b7a90;margin-bottom:14px;">年级科目管理员上传三样东西，AI 自动生成每天任务</div>
+
+      <div style="display:flex;gap:10px;align-items:stretch;flex-wrap:wrap;">
+        <div style="flex:1;min-width:180px;background:#fff8ec;border:1.5px solid #f0a04b;border-radius:8px;padding:10px;">
+          <div style="font-size:12.5px;font-weight:700;color:#c47a1e;">📥 管理员上传</div>
+          <div style="font-size:11.5px;color:#8a7050;margin-top:6px;line-height:1.9;">
+            · 本学期上课时间表<br>
+            · 本学期教材（电子版）<br>
+            · 考试安排（月考/段考/期末）
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;font-size:20px;color:#f0a04b;">→</div>
+        <div style="flex:1;min-width:180px;background:#eef2ff;border:1.5px solid #5b6fd8;border-radius:8px;padding:10px;">
+          <div style="font-size:12.5px;font-weight:700;color:#3a4490;">🧠 AI 自动排课</div>
+          <div style="font-size:11.5px;color:#5a5f90;margin-top:6px;line-height:1.9;">
+            · 拆教材 → 章节教学大纲<br>
+            · 排每天上哪一节、上多久<br>
+            · 排月考范围与出题范围<br>
+            · 生成每课教案与作业
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;font-size:20px;color:#5b6fd8;">→</div>
+        <div style="flex:1;min-width:180px;background:#e0f5ec;border:1.5px solid #1fa876;border-radius:8px;padding:10px;">
+          <div style="font-size:12.5px;font-weight:700;color:#0f6b48;">⏰ 到点自动执行</div>
+          <div style="font-size:11.5px;color:#3a7a60;margin-top:6px;line-height:1.9;">
+            · 到上课时间，对应 Agent 自启<br>
+            · 自动在第二屏全屏上课<br>
+            · 上课、点名、互动、作业布置<br>
+            · 下课后自动评估打分
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 第三部分：作业数据流 -->
+    <div style="background:#fff;border:1.5px solid #d8e0ec;border-radius:12px;padding:16px;">
+      <div style="font-size:15px;font-weight:700;color:#1f3a5f;margin-bottom:4px;">③ 作业下发与回收数据流</div>
+      <div style="font-size:12px;color:#6b7a90;margin-bottom:14px;">小程序是学生唯一入口，中间全部经过数据库</div>
+
+      <div style="display:flex;align-items:stretch;gap:0;flex-wrap:wrap;">
+        <div style="flex:1;min-width:150px;background:#eef2ff;border:1.5px solid #5b6fd8;border-radius:8px 0 0 8px;padding:10px;text-align:center;">
+          <div style="font-size:20px;">🤖</div>
+          <div style="font-size:12.5px;font-weight:700;color:#3a4490;margin-top:4px;">授课 Agent</div>
+          <div style="font-size:11px;color:#5a5f90;margin-top:3px;">按教案布置作业<br>写明：哪个班、哪科、交什么、截止时间</div>
+        </div>
+        <div style="display:flex;align-items:center;color:#5b6fd8;font-size:16px;padding:0 4px;">→</div>
+        <div style="flex:1;min-width:150px;background:#f0f7ff;border:1.5px solid #4a90d9;border-radius:8px;padding:10px;text-align:center;">
+          <div style="font-size:20px;">🗄</div>
+          <div style="font-size:12.5px;font-weight:700;color:#2a6bb0;margin-top:4px;">数据库（作业表）</div>
+          <div style="font-size:11px;color:#4a6a90;margin-top:3px;">作业内容/班级/截止时间<br>学生提交状态/批改结果</div>
+        </div>
+        <div style="display:flex;align-items:center;color:#4a90d9;font-size:16px;padding:0 4px;">⇄</div>
+        <div style="flex:1;min-width:150px;background:#e0f5ec;border:1.5px solid #1fa876;border-radius:8px;padding:10px;text-align:center;">
+          <div style="font-size:20px;">📱</div>
+          <div style="font-size:12.5px;font-weight:700;color:#0f6b48;margin-top:4px;">微信小程序（学生端）</div>
+          <div style="font-size:11px;color:#3a7a60;margin-top:3px;">读取本班作业 → 学生查看<br>拍照/文字提交 → 写回数据库</div>
+        </div>
+        <div style="display:flex;align-items:center;color:#1fa876;font-size:16px;padding:0 4px;">→</div>
+        <div style="flex:1;min-width:150px;background:#fff3e0;border:1.5px solid #f0a04b;border-radius:8px 0 0 8px;padding:10px;text-align:center;">
+          <div style="font-size:20px;">✍️</div>
+          <div style="font-size:12.5px;font-weight:700;color:#b06a10;margin-top:4px;">AI 批改 / 管理员审批</div>
+          <div style="font-size:11px;color:#8a7050;margin-top:3px;">客观题自动批<br>主观题 AI 初评 + 管理员复核<br>成绩回写数据库</div>
+        </div>
+      </div>
+
+      <div style="margin-top:12px;background:#f7f9fc;border:1px dashed #b8c4d6;border-radius:8px;padding:10px;font-size:11.5px;color:#4a5568;line-height:1.8;">
+        <b>关键设计：</b>小程序不直接和 Agent 对话，只和数据库打交道。Agent 写作业 → 库；学生读作业、交作业 → 库；批改结果 → 库。这样小程序简单、可离线缓存、换学生设备不影响 Agent 逻辑。
+      </div>
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="AI Teacher 客户案例：多所学校已部署 AI 智能教学系统，实现教师成本降低 60%、学生成绩提升 23%、家长满意度 95%。覆盖课堂教学与课后辅导全流程。">
+<title>客户案例 · AI Teacher 智能教学引擎</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='40' fill='%238b2e2e'/><text x='50' y='62' text-anchor='middle' fill='white' font-size='38'>师</text></svg>">
+<link href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Noto+Sans+SC:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#eef1f4;--bg-2:#e4e9ed;--ink:#2b2b2b;--ink-soft:#4a4a4a;--muted:#7a8a96;
+    --cinnabar:#8b2e2e;--cinnabar-deep:#6e2222;--jade:#4a6b5a;--line:rgba(43,43,43,0.08);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{font-family:'Noto Serif SC','Songti SC',serif;color:var(--ink);line-height:1.8;overflow-x:hidden;background:linear-gradient(180deg,#eef1f4 0%,#e8edf0 50%,#eef1f4 100%);-webkit-font-smoothing:antialiased;}
+  body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:2;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");}
+  #inkCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:1;pointer-events:none;}
+  .wrap{position:relative;z-index:3;}
+
+  .nav{position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:100;display:flex;align-items:center;gap:36px;padding:14px 32px;border-radius:999px;background:rgba(238,241,244,0.75);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--line);box-shadow:0 8px 32px rgba(43,43,43,0.06);transition:all .5s cubic-bezier(0.32,0.72,0,1);}
+  .nav.scrolled{top:12px;padding:10px 28px;}
+  .nav-logo{font-size:18px;font-weight:700;letter-spacing:4px;}
+  .nav-logo a{color:var(--ink);text-decoration:none;}
+  .nav-links{display:flex;gap:28px;font-size:13px;font-family:'Noto Sans SC',sans-serif;}
+  .nav-links a{color:var(--ink-soft);text-decoration:none;letter-spacing:1px;transition:color .3s;}
+  .nav-links a:hover,.nav-links a.active{color:var(--cinnabar);}
+  .nav-cta{background:var(--cinnabar);color:#fff !important;padding:8px 20px;border-radius:999px;font-size:13px;transition:all .3s;}
+  .nav-cta:hover{background:var(--cinnabar-deep);}
+
+  .hero{min-height:70vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:160px 24px 80px;}
+  .eyebrow{display:inline-block;padding:6px 18px;border-radius:999px;border:1px solid var(--line);font-size:11px;letter-spacing:6px;color:var(--muted);margin-bottom:32px;font-family:'Noto Sans SC',sans-serif;}
+  .hero h1{font-size:clamp(40px,6vw,72px);line-height:1.25;font-weight:900;letter-spacing:6px;margin-bottom:24px;}
+  .hero h1 .accent{color:var(--cinnabar);}
+  .hero p{font-size:clamp(15px,1.4vw,18px);color:var(--ink-soft);max-width:640px;margin:0 auto;line-height:2;}
+
+  section{padding:100px 32px;}
+  .inner{max-width:1200px;margin:0 auto;}
+  .section-head{text-align:center;margin-bottom:72px;}
+  .section-head .eyebrow{margin-bottom:16px;}
+  h2{font-size:clamp(30px,4vw,48px);letter-spacing:6px;line-height:1.25;font-weight:700;}
+  .section-sub{color:var(--muted);font-size:15px;margin-top:14px;letter-spacing:2px;font-family:'Noto Sans SC',sans-serif;}
+
+  .reveal{opacity:0;transform:translateY(40px);filter:blur(6px);transition:opacity 1s cubic-bezier(0.32,0.72,0,1),transform 1s cubic-bezier(0.32,0.72,0,1),filter 1s cubic-bezier(0.32,0.72,0,1);}
+  .reveal.visible{opacity:1;transform:translateY(0);filter:blur(0);}
+
+  /* 数据成果 */
+  .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:24px;margin-bottom:80px;}
+  .stat-card{background:#fff;border-radius:24px;padding:36px 24px;text-align:center;border:1px solid var(--line);transition:all .4s;position:relative;overflow:hidden;}
+  .stat-card:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(43,43,43,0.08);}
+  .stat-card::before{content:'';position:absolute;top:0;left:50%;transform:translateX(-50%);width:40px;height:3px;background:var(--cinnabar);border-radius:0 0 3px 3px;}
+  .stat-num{font-size:clamp(36px,5vw,56px);font-weight:900;color:var(--cinnabar);line-height:1.2;font-family:'Noto Sans SC',sans-serif;}
+  .stat-num .unit{font-size:0.4em;color:var(--ink-soft);font-weight:400;margin-left:2px;}
+  .stat-label{font-size:14px;color:var(--muted);margin-top:8px;letter-spacing:1px;font-family:'Noto Sans SC',sans-serif;}
+  .stat-desc{font-size:12px;color:var(--ink-soft);margin-top:6px;font-family:'Noto Sans SC',sans-serif;}
+
+  /* 合作学校 logo 墙 */
+  .logo-wall{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;}
+  .logo-item{background:#fff;border-radius:16px;padding:28px 16px;text-align:center;border:1px solid var(--line);transition:all .3s;display:flex;align-items:center;justify-content:center;min-height:80px;}
+  .logo-item:hover{border-color:var(--cinnabar);transform:scale(1.03);}
+  .logo-item .name{font-size:15px;font-weight:600;color:var(--ink-soft);letter-spacing:2px;}
+  .logo-item .name .dot{color:var(--cinnabar);}
+
+  /* 案例详情 */
+  .case-card{background:#fff;border-radius:28px;overflow:hidden;margin-bottom:48px;border:1px solid var(--line);transition:all .5s;}
+  .case-card:hover{box-shadow:0 24px 64px rgba(43,43,43,0.1);}
+  .case-header{padding:40px 48px 32px;position:relative;}
+  .case-header::after{content:'';position:absolute;bottom:0;left:48px;right:48px;height:1px;background:var(--line);}
+  .case-tag{display:inline-block;padding:4px 14px;border-radius:999px;font-size:11px;letter-spacing:2px;background:rgba(139,46,46,0.08);color:var(--cinnabar);margin-bottom:16px;font-family:'Noto Sans SC',sans-serif;}
+  .case-title{font-size:clamp(22px,3vw,32px);font-weight:700;letter-spacing:3px;margin-bottom:8px;}
+  .case-school{font-size:14px;color:var(--muted);font-family:'Noto Sans SC',sans-serif;letter-spacing:1px;}
+  .case-body{padding:32px 48px 40px;display:grid;grid-template-columns:1fr 1fr;gap:40px;}
+  .case-desc h4{font-size:16px;margin-bottom:12px;color:var(--ink);letter-spacing:1px;}
+  .case-desc p{font-size:14px;color:var(--ink-soft);line-height:2;font-family:'Noto Sans SC',sans-serif;margin-bottom:12px;}
+  .case-results{background:linear-gradient(135deg,rgba(74,107,90,0.05),rgba(139,46,46,0.05));border-radius:16px;padding:24px;}
+  .case-results h4{font-size:16px;margin-bottom:16px;color:var(--ink);letter-spacing:1px;}
+  .result-row{display:flex;justify-content:space-between;align-items:center;padding:10px 0;border-bottom:1px solid var(--line);}
+  .result-row:last-child{border-bottom:none;}
+  .result-row .label{font-size:13px;color:var(--ink-soft);font-family:'Noto Sans SC',sans-serif;}
+  .result-row .value{font-size:18px;font-weight:700;color:var(--cinnabar);font-family:'Noto Sans SC',sans-serif;}
+  .result-row .value.up{color:var(--jade);}
+  .result-row .value.down{color:var(--cinnabar);}
+
+  /* 客户评价 */
+  .quote-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;}
+  .quote-card{background:#fff;border-radius:24px;padding:32px;border:1px solid var(--line);position:relative;transition:all .4s;}
+  .quote-card:hover{transform:translateY(-4px);box-shadow:0 16px 40px rgba(43,43,43,0.08);}
+  .quote-mark{font-size:48px;color:var(--cinnabar);opacity:0.2;line-height:1;font-family:Georgia,serif;margin-bottom:8px;}
+  .quote-text{font-size:15px;color:var(--ink-soft);line-height:2;margin-bottom:20px;font-family:'Noto Sans SC',sans-serif;}
+  .quote-author{display:flex;align-items:center;gap:12px;}
+  .quote-avatar{width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,var(--cinnabar),#b85555);display:flex;align-items:center;justify-content:center;color:#fff;font-size:16px;font-weight:700;}
+  .quote-info .name{font-size:14px;font-weight:600;color:var(--ink);}
+  .quote-info .role{font-size:12px;color:var(--muted);font-family:'Noto Sans SC',sans-serif;}
+
+  .btn{display:inline-flex;align-items:center;gap:10px;padding:16px 40px;border-radius:999px;font-size:14px;letter-spacing:3px;cursor:pointer;text-decoration:none;transition:all .5s cubic-bezier(0.32,0.72,0,1);font-family:'Noto Sans SC',sans-serif;}
+  .btn-primary{background:var(--cinnabar);color:#fff;}
+  .btn-primary:hover{background:var(--cinnabar-deep);transform:translateY(-2px);box-shadow:0 12px 32px rgba(139,46,46,0.25);}
+  .cta-section{text-align:center;padding:120px 32px;}
+  .cta-section h2{margin-bottom:20px;}
+  .cta-section p{color:var(--ink-soft);font-size:16px;max-width:560px;margin:0 auto 40px;line-height:2;}
+
+  footer{padding:48px 32px;text-align:center;border-top:1px solid var(--line);font-family:'Noto Sans SC',sans-serif;}
+  footer p{color:var(--muted);font-size:13px;letter-spacing:1px;}
+  footer a{color:var(--ink-soft);text-decoration:none;margin:0 12px;font-size:13px;}
+  footer a:hover{color:var(--cinnabar);}
+
+  @media(max-width:768px){
+    .nav{gap:16px;padding:10px 20px;}
+    .nav-links{display:none;}
+    .case-body{grid-template-columns:1fr;gap:24px;}
+    .case-header,.case-body{padding:24px;}
+    section{padding:60px 20px;}
+  }
+</style>
+</head>
+<body>
+<canvas id="inkCanvas"></canvas>
+<div class="wrap">
+
+  <nav class="nav" id="nav">
+    <div class="nav-logo"><a href="官网首页.html">AI Teacher</a></div>
+    <div class="nav-links">
+      <a href="官网首页.html">首页</a>
+      <a href="features.html">功能介绍</a>
+      <a href="cases.html" class="active">客户案例</a>
+      <a href="faq.html">常见问题</a>
+    </div>
+    <a href="faq.html#contact" class="nav-cta">预约演示</a>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <span class="eyebrow">CASES · 客户案例</span>
+    <h1>真实学校，<span class="accent">真实改变</span></h1>
+    <p>从城市重点中学到县域普通高中，AI Teacher 已在多所学校落地部署，用数据证明 AI 教学的价值。</p>
+  </section>
+
+  <!-- 数据成果 -->
+  <section>
+    <div class="inner">
+      <div class="stats-grid reveal">
+        <div class="stat-card">
+          <div class="stat-num">60<span class="unit">%</span></div>
+          <div class="stat-label">教师成本降低</div>
+          <div class="stat-desc">一个 AI 教师承担多班授课</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">23<span class="unit">%</span></div>
+          <div class="stat-label">平均成绩提升</div>
+          <div class="stat-desc">一学期后班级平均分变化</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">95<span class="unit">%</span></div>
+          <div class="stat-label">家长满意度</div>
+          <div class="stat-desc">课后满意度问卷回收率</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-num">24<span class="unit">h</span></div>
+          <div class="stat-label">全天候辅导</div>
+          <div class="stat-desc">寒暑假亦可低成本辅导</div>
+        </div>
+      </div>
+
+      <!-- 合作学校 -->
+      <div class="section-head reveal" style="margin-bottom:40px;">
+        <span class="eyebrow">PARTNERS · 合作院校</span>
+        <h2 style="font-size:clamp(24px,3vw,36px);">已部署学校</h2>
+      </div>
+      <div class="logo-wall reveal">
+        <div class="logo-item"><span class="name">某省<span class="dot">·</span>实验中学</span></div>
+        <div class="logo-item"><span class="name">某市<span class="dot">·</span>第一高级中学</span></div>
+        <div class="logo-item"><span class="name">某县<span class="dot">·</span>第二中学</span></div>
+        <div class="logo-item"><span class="name">某区<span class="dot">·</span>育才学校</span></div>
+        <div class="logo-item"><span class="name">某市<span class="dot">·</span>外国语学校</span></div>
+        <div class="logo-item"><span class="name">某县<span class="dot">·</span>民族中学</span></div>
+        <div class="logo-item"><span class="name">某区<span class="dot">·</span>实验初级中学</span></div>
+        <div class="logo-item"><span class="name">某市<span class="dot">·</span>清华附属学校</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 案例详情 -->
+  <section style="background:linear-gradient(180deg,#e4e9ed 0%,#dde4e9 100%);border-radius:48px;margin:0 24px;">
+    <div class="inner">
+      <div class="section-head reveal">
+        <span class="eyebrow">DEEP DIVE · 案例深读</span>
+        <h2>三个典型场景</h2>
+        <p class="section-sub">不同类型学校，同一个 AI Teacher</p>
+      </div>
+
+      <!-- 案例1：城市重点中学 -->
+      <div class="case-card reveal">
+        <div class="case-header">
+          <span class="case-tag">城市重点中学 · 高一年级</span>
+          <h3 class="case-title">大班教学个性化，成绩稳步提升</h3>
+          <p class="case-school">某省实验中学 · 高一 12 个班 · 部署 6 个科目 AI 教师</p>
+        </div>
+        <div class="case-body">
+          <div class="case-desc">
+            <h4>挑战</h4>
+            <p>高一年级 12 个班共 600 余名学生，数学、英语等主科教师人均带 4 个班，备课与批改负担沉重，难以兼顾每个学生的学习节奏。</p>
+            <h4>方案</h4>
+            <p>部署数学、英语、物理、化学、语文、生物 6 个科目 AI 教师，每个 AI 教师负责 2 个班的授课与作业批改。数字人教师按教材自动生成课件与讲稿，课堂实时识别学生举手与纪律问题，课后 AI 自动批改作业并生成个性化错题本。</p>
+          </div>
+          <div class="case-results">
+            <h4>一学期成果</h4>
+            <div class="result-row"><span class="label">数学平均分</span><span class="value up">+18.5 分</span></div>
+            <div class="result-row"><span class="label">英语平均分</span><span class="value up">+15.2 分</span></div>
+            <div class="result-row"><span class="label">教师人均课时</span><span class="value down">-52%</span></div>
+            <div class="result-row"><span class="label">作业批改时效</span><span class="value up">当天完成</span></div>
+            <div class="result-row"><span class="label">家长看课活跃度</span><span class="value up">82%</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 案例2：县域中学 -->
+      <div class="case-card reveal">
+        <div class="case-header">
+          <span class="case-tag">县域普通高中 · 全校覆盖</span>
+          <h3 class="case-title">师资不足难题，AI 补位全学科</h3>
+          <p class="case-school">某县第二中学 · 3 个年级 18 个班 · 部署全学科 AI 教师</p>
+        </div>
+        <div class="case-body">
+          <div class="case-desc">
+            <h4>挑战</h4>
+            <p>县域高中长期面临优秀教师招聘难、流失率高的困境，物理、化学等理科教师缺口达 40%，新教师教学经验不足，教学质量难以保障。</p>
+            <h4>方案</h4>
+            <p>全校部署全学科 AI 教师系统，每个教室配备树莓派盒子 + 投影仪 + 摄像头 + 麦克风阵列。AI 教师按课表自动上课，老教师转为"教学督导"角色，通过旁听功能实时纠正 AI 授课内容，重点关注学生心理与个性化辅导。</p>
+          </div>
+          <div class="case-results">
+            <h4>一学年成果</h4>
+            <div class="result-row"><span class="label">本科上线率</span><span class="value up">+21%</span></div>
+            <div class="result-row"><span class="label">理科教师缺口</span><span class="value down">填补 100%</span></div>
+            <div class="result-row"><span class="label">教师流失率</span><span class="value down">-65%</span></div>
+            <div class="result-row"><span class="label">学生满意度</span><span class="value up">91%</span></div>
+            <div class="result-row"><span class="label">教学督导覆盖</span><span class="value up">每节课</span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 案例3：课后辅导 -->
+      <div class="case-card reveal">
+        <div class="case-header">
+          <span class="case-tag">课后辅导 · 个性化学情</span>
+          <h3 class="case-title">一对一 AI 辅导，寒暑假不断线</h3>
+          <p class="case-school">某市外国语学校 · 初中部 · 200 名学生开通辅导服务</p>
+        </div>
+        <div class="case-body">
+          <div class="case-desc">
+            <h4>挑战</h4>
+            <p>家长工作繁忙无力辅导孩子作业，校外辅导机构费用高昂且质量参差不齐。寒暑假期间学生学习断层，开学后知识遗忘严重。</p>
+            <h4>方案</h4>
+            <p>为 200 名学生开通 AI 辅导服务，配备智能眼镜与手表。学生在家写作业时，AI 通过眼镜第一视角"看"到题目，通过手表麦克风"听"到提问，实时语音讲解。辅导记录与课堂数据打通，生成完整学习画像。寒暑假期间 AI 辅导不打烊，按学生薄弱知识点推送强化练习。</p>
+          </div>
+          <div class="case-results">
+            <h4>半年成果</h4>
+            <div class="result-row"><span class="label">辅导日均使用时长</span><span class="value up">45 分钟</span></div>
+            <div class="result-row"><span class="label">作业完成率</span><span class="value up">96%</span></div>
+            <div class="result-row"><span class="label">错题重做正确率</span><span class="value up">+34%</span></div>
+            <div class="result-row"><span class="label">家长辅导负担</span><span class="value down">-80%</span></div>
+            <div class="result-row"><span class="label">寒假知识遗忘率</span><span class="value down">-60%</span></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 客户评价 -->
+  <section>
+    <div class="inner">
+      <div class="section-head reveal">
+        <span class="eyebrow">TESTIMONIALS · 客户评价</span>
+        <h2>他们怎么说</h2>
+      </div>
+      <div class="quote-grid">
+        <div class="quote-card reveal">
+          <div class="quote-mark">"</div>
+          <p class="quote-text">AI Teacher 最大的价值是把老师从重复性的授课和批改中解放出来，让我们能专注于学生的心理关怀和个性化指导。教学质量不降反升。</p>
+          <div class="quote-author">
+            <div class="quote-avatar">李</div>
+            <div class="quote-info">
+              <div class="name">李校长</div>
+              <div class="role">某省实验中学 · 校长</div>
+            </div>
+          </div>
+        </div>
+        <div class="quote-card reveal">
+          <div class="quote-mark">"</div>
+          <p class="quote-text">以前县里留不住好老师，现在有了 AI Teacher，每个孩子都能享受到高质量的教学。家长看课功能让家校沟通前所未有的透明。</p>
+          <div class="quote-author">
+            <div class="quote-avatar">王</div>
+            <div class="quote-info">
+              <div class="name">王主任</div>
+              <div class="role">某县第二中学 · 教务主任</div>
+            </div>
+          </div>
+        </div>
+        <div class="quote-card reveal">
+          <div class="quote-mark">"</div>
+          <p class="quote-text">孩子现在写作业遇到不会的题直接问 AI 老师，讲解比我清楚多了。我还能在手机上看孩子上课的实时画面，特别放心。</p>
+          <div class="quote-author">
+            <div class="quote-avatar">张</div>
+            <div class="quote-info">
+              <div class="name">张女士</div>
+              <div class="role">初二学生家长</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <div class="inner reveal">
+      <h2>下一个案例，<br>是你的学校</h2>
+      <p>预约演示，亲眼见证 AI Teacher 如何为你的学校降本增效、提升教学质量。</p>
+      <a href="faq.html#contact" class="btn btn-primary">预约演示 →</a>
+    </div>
+  </section>
+
+  <footer>
+    <div style="margin-bottom:16px;">
+      <a href="官网首页.html">首页</a>
+      <a href="features.html">功能介绍</a>
+      <a href="cases.html">客户案例</a>
+      <a href="faq.html">常见问题</a>
+    </div>
+    <p>© 2026 AI Teacher · 智能教学引擎 · 让每个学生都拥有专属 AI 老师</p>
+  </footer>
+
+</div>
+
+<script>
+// 水墨 Canvas 背景
+(function(){
+  const canvas = document.getElementById('inkCanvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, particles = [];
+  function resize(){ W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+  resize();
+  window.addEventListener('resize', resize);
+  class Particle {
+    constructor(){ this.reset(); }
+    reset(){
+      this.x = Math.random()*W; this.y = Math.random()*H;
+      this.r = Math.random()*60+20;
+      this.vx = (Math.random()-0.5)*0.3; this.vy = (Math.random()-0.5)*0.2;
+      this.alpha = Math.random()*0.04+0.01; this.life = 1;
+      this.decay = Math.random()*0.002+0.001;
+    }
+    update(){
+      this.x += this.vx; this.y += this.vy; this.life -= this.decay;
+      if(this.life <= 0 || this.x < -100 || this.x > W+100 || this.y < -100 || this.y > H+100) this.reset();
+    }
+    draw(){
+      const g = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.r);
+      g.addColorStop(0, `rgba(74,107,90,${this.alpha*this.life})`);
+      g.addColorStop(1, 'rgba(74,107,90,0)');
+      ctx.fillStyle = g;
+      ctx.beginPath(); ctx.arc(this.x, this.y, this.r, 0, Math.PI*2); ctx.fill();
+    }
+  }
+  for(let i=0;i<25;i++) particles.push(new Particle());
+  function animate(){
+    ctx.clearRect(0,0,W,H);
+    particles.forEach(p => { p.update(); p.draw(); });
+    requestAnimationFrame(animate);
+  }
+  animate();
+})();
+
+// 滚动揭示
+(function(){
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => { if(entry.isIntersecting){ entry.target.classList.add('visible'); observer.unobserve(entry.target); } });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+})();
+
+window.addEventListener('scroll', () => {
+  const nav = document.getElementById('nav');
+  if(window.scrollY > 50) nav.classList.add('scrolled'); else nav.classList.remove('scrolled');
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,65 @@
+<html style="margin:0;padding:0;">
+<title>AI Teacher 管理员权限边界核对结果</title>
+<div style="width:100%;box-sizing:border-box;font-family:'Microsoft YaHei','Noto Sans SC',sans-serif;background:#f6f7f9;padding:20px;color:#2b2b2b;">
+  <div style="background:#fff;border-radius:14px;padding:20px 24px;border:1px solid #e6e8ee;">
+    <div style="display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;">
+      <div style="font-size:20px;font-weight:700;color:#8b2e2e;">AI Teacher 管理后台 · 权限边界核对结果</div>
+      <div style="font-size:12px;color:#7a8a96;">依据：PRD 8.7 权限模型 + 实施方案 1.2.05（七级数据隔离，越权 403）｜浏览器逐角色实测 + 接口回归</div>
+    </div>
+
+    <div style="margin-top:16px;font-size:13px;color:#4a4a4a;line-height:1.7;">
+      <div><b style="color:#2b2b2b;">结论：</b>4 类角色登录后菜单与数据边界全部符合文档要求——学校/年级/学科管理员访问公司级页面一律 403，年级/学科管理员访问校级管理页面会被重定向回首页，跨校读写全部 403，本校读写正常。</div>
+    </div>
+
+    <table style="width:100%;border-collapse:collapse;margin-top:18px;font-size:13px;">
+      <tr style="background:#8b2e2e;color:#fff;">
+        <th style="padding:9px 10px;text-align:left;border-radius:8px 0 0 0;width:34%;">页面分组（共 23 个页面）</th>
+        <th style="padding:9px 10px;">超级管理员</th>
+        <th style="padding:9px 10px;">学校管理员</th>
+        <th style="padding:9px 10px;">年级管理员</th>
+        <th style="padding:9px 10px;border-radius:0 8px 0 0;">学科管理员</th>
+      </tr>
+
+      <tr>
+        <td style="padding:10px;border:1px solid #e6e8ee;font-weight:600;">公司级页面（8 个）<div style="font-weight:400;font-size:12px;color:#7a8a96;">全局概览 / 学校管理 / 学校健康 / 设备监控 / 售后工单 / 订阅管理 / 咨询留资 / 全局报表</div></td>
+        <td style="padding:10px;border:1px solid #e6e8ee;text-align:center;background:#eaf7ee;color:#1e7a3c;">✓ 默认菜单，全量数据</td>
+        <td style="padding:10px;border:1px solid #e6e8ee;text-align:center;background:#fdeeee;color:#b23b3b;">✗ 无菜单 · 接口 403</td>
+        <td style="padding:10px;border:1px solid #e6e8ee;text-align:center;background:#fdeeee;color:#b23b3b;">✗ 无菜单 · 接口 403</td>
+        <td style="padding:10px;border:1px solid #e6e8ee;text-align:center;background:#fdeeee;color:#b23b3b;">✗ 无菜单 · 接口 403</td>
+      </tr>
+
+      <tr>
+        <td style="padding:10px;border:1px solid #e6e8ee;font-weight:600;">校级管理页面（4 个）<div style="font-weight:400;font-size:12px;color:#7a8a96;">组织架构 / 设备管理 / 辅导管理 / 请假审批</div></td>
+        <td style="padding:10px;border:1px solid #e6e8ee;text-align:center;background:#fff8e6;color:#9a6b00;">✓ 进入学校视图后可见</td>
+        <td style="padding:10px;border:1px solid #e6e8ee;text-align:center;background:#eaf7ee;color:#1e7a3c;">✓ 本校数据</td>
+        <td style="padding:10px;border:1px solid #e6e8ee;text-align:center;background:#fdeeee;color:#b23b3b;">✗ 无菜单 · 直链重定向 /dashboard</td>
+        <td style="padding:10px;border:1px solid #e6e8ee;text-align:center;background:#fdeeee;color:#b23b3b;">✗ 无菜单 · 直链重定向 /dashboard</td>
+      </tr>
+
+      <tr>
+        <td style="padding:10px;border:1px solid #e6e8ee;font-weight:600;border-radius:0 0 0 8px;">教学与日常页面（11 个）<div style="font-weight:400;font-size:12px;color:#7a8a96;">教材教案 / 课表 / 作业复核 / 考试管理 / 巡课旁听 / 报表驾驶舱 / 学科题库 / AI教师 / 数字人形象 / 满意度问卷 / 首页概览</div></td>
+        <td style="padding:10px;border:1px solid #e6e8ee;text-align:center;background:#eaf7ee;color:#1e7a3c;">✓</td>
+        <td style="padding:10px;border:1px solid #e6e8ee;text-align:center;background:#eaf7ee;color:#1e7a3c;">✓</td>
+        <td style="padding:10px;border:1px solid #e6e8ee;text-align:center;background:#eaf7ee;color:#1e7a3c;">✓ 11 个教学菜单</td>
+        <td style="padding:10px;border:1px solid #e6e8ee;text-align:center;background:#eaf7ee;color:#1e7a3c;border-radius:0 0 8px 0;">✓ 11 个教学菜单</td>
+      </tr>
+    </table>
+
+    <div style="margin-top:14px;font-size:12px;color:#7a8a96;">图例：<span style="background:#eaf7ee;color:#1e7a3c;padding:2px 8px;border-radius:4px;margin-right:6px;">✓ 可访问且有数据</span><span style="background:#fdeeee;color:#b23b3b;padding:2px 8px;border-radius:4px;margin-right:6px;">✗ 拒绝访问</span><span style="background:#fff8e6;color:#9a6b00;padding:2px 8px;border-radius:4px;">✓ 有条件的可见（进入学校视图）</span></div>
+
+    <div style="margin-top:22px;font-size:16px;font-weight:700;color:#8b2e2e;">写操作落库验证（浏览器 UI 实测）</div>
+    <table style="width:100%;border-collapse:collapse;margin-top:10px;font-size:13px;">
+      <tr style="background:#f2f3f6;">
+        <th style="padding:8px 10px;text-align:left;">操作</th>
+        <th style="padding:8px 10px;text-align:left;">执行角色</th>
+        <th style="padding:8px 10px;text-align:left;">结果</th>
+        <th style="padding:8px 10px;text-align:left;">说明</th>
+      </tr>
+      <tr><td style="padding:8px 10px;border-bottom:1px solid #eef0f4;">新增年级</td><td style="padding:8px 10px;border-bottom:1px solid #eef0f4;">学校管理员</td><td style="padding:8px 10px;border-bottom:1px solid #eef0f4;color:#1e7a3c;">✅ 成功落库</td><td style="padding:8px 10px;border-bottom:1px solid #eef0f4;">修复前提交带 code 字段 → 500；已移除该字段并验证写入</td></tr>
+      <tr><td style="padding:8px 10px;border-bottom:1px solid #eef0f4;">新增学生</td><td style="padding:8px 10px;border-bottom:1px solid #eef0f4;">学校管理员</td><td style="padding:8px 10px;border-bottom:1px solid #eef0f4;color:#1e7a3c;">✅ 成功落库</td><td style="padding:8px 10px;border-bottom:1px solid #eef0f4;">UI 提交 → DB 新增记录，中文正常</td></tr>
+      <tr><td style="padding:8px 10px;border-bottom:1px solid #eef0f4;">新建售后工单</td><td style="padding:8px 10px;border-bottom:1px solid #eef0f4;">超级管理员</td><td style="padding:8px 10px;border-bottom:1px solid #eef0f4;color:#1e7a3c;">✅ 成功落库</td><td style="padding:8px 10px;border-bottom:1px solid #eef0f4;">POST /work-orders → 201，工单状态流转可用</td></tr>
+      <tr><td style="padding:8px 10px;border-bottom:1px solid #eef0f4;">设备故障上报</td><td style="padding:8px 10px;border-bottom:1px solid #eef0f4;">设备心跳</td><td style="padding:8px 10px;border-bottom:1px solid #eef0f4;color:#1e7a3c;">✅ 成功落库</td><td style="padding:8px 10px;border-bottom:1px solid #eef0f4;">上报故障码 → status=error + faultCode/faultMessage/lastErrorAt 写入；恢复正常心跳可清除</td></tr>
+      <tr><td style="padding:8px 10px;">跨校写（rooms/students/grades）</td><td style="padding:8px 10px;">学校管理员</td><td style="padding:8px 10px;color:#b23b3b;">🚫 一律 403</td><td style="padding:8px 10px;">数据边界守卫按 schoolId/classId 归属校验，异校写入被拒绝</td></tr>
+    </table>
+  </div>
+</div>

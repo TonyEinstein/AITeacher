@@ -1,0 +1,122 @@
+<html style="margin:0;padding:0;">
+<title>AI Teacher 产品分层架构与功能关系</title>
+<div style="width:100%;box-sizing:border-box;font-family:'Segoe UI','Microsoft YaHei',sans-serif;background:#f7f9fc;padding:24px;">
+  <div style="max-width:1080px;margin:0 auto;">
+
+    <div style="text-align:center;margin-bottom:20px;">
+      <div style="font-size:22px;font-weight:700;color:#1f3a5f;">AI Teacher 产品分层架构</div>
+      <div style="font-size:13px;color:#6b7a90;margin-top:6px;">桌面端（课堂/辅导实时工作端）+ Web 管理后台 · 模块关系示意</div>
+    </div>
+
+    <!-- 第1层：终端设备层 -->
+    <div style="background:#e8f1fb;border:1.5px solid #3b7dd8;border-radius:10px;padding:14px 16px;margin-bottom:6px;">
+      <div style="font-size:13px;font-weight:700;color:#1f5aa8;letter-spacing:1px;">① 终端层</div>
+      <div style="display:flex;gap:12px;margin-top:10px;flex-wrap:wrap;">
+        <div style="flex:1;min-width:200px;background:#fff;border:1px solid #c5d9f2;border-radius:8px;padding:10px;">
+          <div style="font-weight:600;color:#1f3a5f;font-size:14px;">🖥 教室桌面端（主）</div>
+          <div style="font-size:12px;color:#5a6b80;margin-top:4px;">主摄像头 + 麦克风阵列 · 课堂授课与实时辅导 · AI Agent 常驻运行</div>
+        </div>
+        <div style="flex:1;min-width:200px;background:#fff;border:1px solid #c5d9f2;border-radius:8px;padding:10px;">
+          <div style="font-weight:600;color:#1f3a5f;font-size:14px;">⌚ 学生可穿戴设备</div>
+          <div style="font-size:12px;color:#5a6b80;margin-top:4px;">智能眼镜（看）/ 智能手表·耳机（听·说）· 一对一辅导随身采集</div>
+        </div>
+        <div style="flex:1;min-width:200px;background:#fff;border:1px solid #c5d9f2;border-radius:8px;padding:10px;">
+          <div style="font-weight:600;color:#1f3a5f;font-size:14px;">🌐 Web 管理后台</div>
+          <div style="font-size:12px;color:#5a6b80;margin-top:4px;">排课 · 花名册 · 人脸绑定 · 请假审批 · 评估报表（任意浏览器/手机）</div>
+        </div>
+      </div>
+    </div>
+    <div style="text-align:center;color:#3b7dd8;font-size:18px;line-height:1;margin:2px 0;">▼</div>
+
+    <!-- 第2层：IoT 网关层 -->
+    <div style="background:#e6f7f1;border:1.5px solid #2fb587;border-radius:10px;padding:14px 16px;margin-bottom:6px;">
+      <div style="font-size:13px;font-weight:700;color:#1d8a63;letter-spacing:1px;">② IoT 设备网关层（你说的"物联网层"）</div>
+      <div style="display:flex;gap:12px;margin-top:10px;flex-wrap:wrap;">
+        <div style="flex:1;min-width:150px;background:#fff;border:1px solid #b7e6d3;border-radius:8px;padding:10px;">
+          <div style="font-weight:600;color:#14694a;font-size:13px;">设备发现与配对</div>
+          <div style="font-size:11px;color:#5a7a70;margin-top:3px;">蓝牙 / USB / Wi-Fi 扫描，绑定到学生</div>
+        </div>
+        <div style="flex:1;min-width:150px;background:#fff;border:1px solid #b7e6d3;border-radius:8px;padding:10px;">
+          <div style="font-weight:600;color:#14694a;font-size:13px;">音视频流接入</div>
+          <div style="font-size:11px;color:#5a7a70;margin-top:3px;">多路音频/视频统一接入、缓冲、降噪</div>
+        </div>
+        <div style="flex:1;min-width:150px;background:#fff;border:1px solid #b7e6d3;border-radius:8px;padding:10px;">
+          <div style="font-weight:600;color:#14694a;font-size:13px;">设备状态管理</div>
+          <div style="font-size:11px;color:#5a7a70;margin-top:3px;">在线/离线、电量、占用、重连</div>
+        </div>
+      </div>
+    </div>
+    <div style="text-align:center;color:#2fb587;font-size:18px;line-height:1;margin:2px 0;">▼</div>
+
+    <!-- 第3层：AI 能力层 -->
+    <div style="background:#fff4e6;border:1.5px solid #f0a04b;border-radius:10px;padding:14px 16px;margin-bottom:6px;">
+      <div style="font-size:13px;font-weight:700;color:#c47a1e;letter-spacing:1px;">③ AI 能力层（LLM 走第三方 API，Key 由你在云后台配置，学校端碰不到）</div>
+      <div style="display:flex;gap:10px;margin-top:10px;flex-wrap:wrap;">
+        <div style="flex:1;min-width:130px;background:#fff;border:1px solid #f5d3a3;border-radius:8px;padding:9px;text-align:center;">
+          <div style="font-weight:600;color:#9a5e10;font-size:13px;">🧠 LLM 大脑</div>
+          <div style="font-size:11px;color:#8a7050;margin-top:3px;">授课/答疑/生成教案</div>
+        </div>
+        <div style="flex:1;min-width:130px;background:#fff;border:1px solid #f5d3a3;border-radius:8px;padding:9px;text-align:center;">
+          <div style="font-weight:600;color:#9a5e10;font-size:13px;">🎙 语音 ASR/TTS</div>
+          <div style="font-size:11px;color:#8a7050;margin-top:3px;">听懂学生 / 开口讲课</div>
+        </div>
+        <div style="flex:1;min-width:130px;background:#fff;border:1px solid #f5d3a3;border-radius:8px;padding:9px;text-align:center;">
+          <div style="font-weight:600;color:#9a5e10;font-size:13px;">😊 人脸 / 行为识别</div>
+          <div style="font-size:11px;color:#8a7050;margin-top:3px;">认人 · 表情 · 举手 · 开小差</div>
+        </div>
+        <div style="flex:1;min-width:130px;background:#fff;border:1px solid #f5d3a3;border-radius:8px;padding:9px;text-align:center;">
+          <div style="font-weight:600;color:#9a5e10;font-size:13px;">📏 规则 / Skill 引擎</div>
+          <div style="font-size:11px;color:#8a7050;margin-top:3px;">纪律、请假、提问策略、评分规则</div>
+        </div>
+      </div>
+    </div>
+    <div style="text-align:center;color:#f0a04b;font-size:18px;line-height:1;margin:2px 0;">▼</div>
+
+    <!-- 第4层：业务 Agent 层 -->
+    <div style="background:#eef0fb;border:1.5px solid #6c7bd8;border-radius:10px;padding:14px 16px;margin-bottom:6px;">
+      <div style="font-size:13px;font-weight:700;color:#4a57b8;letter-spacing:1px;">④ 业务 Agent 层（产品核心）</div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:10px;margin-top:10px;">
+        <div style="background:#fff;border:1px solid #c9cff0;border-radius:8px;padding:10px;">
+          <div style="font-weight:600;color:#3a4490;font-size:13px;">📚 课堂 Agent</div>
+          <div style="font-size:11px;color:#6a6f90;margin-top:4px;">定时上课 · 按教案讲 · 提问互动 · 点名考勤 · 维持纪律</div>
+        </div>
+        <div style="background:#fff;border:1px solid #c9cff0;border-radius:8px;padding:10px;">
+          <div style="font-weight:600;color:#3a4490;font-size:13px;">🤝 辅导 Agent</div>
+          <div style="font-size:11px;color:#6a6f90;margin-top:4px;">穿戴设备随身听看 · 一对一答疑 · 观察学生状态</div>
+        </div>
+        <div style="background:#fff;border:1px solid #c9cff0;border-radius:8px;padding:10px;">
+          <div style="font-weight:600;color:#3a4490;font-size:13px;">🗂 课程规划 Agent</div>
+          <div style="font-size:11px;color:#6a6f90;margin-top:4px;">上传电子版教材 → 拆大纲 → 排进度 → 生成每课教案</div>
+        </div>
+        <div style="background:#fff;border:1px solid #c9cff0;border-radius:8px;padding:10px;">
+          <div style="font-weight:600;color:#3a4490;font-size:13px;">🧑‍🏫 学籍与考勤</div>
+          <div style="font-size:11px;color:#6a6f90;margin-top:4px;">花名册 · 人脸↔姓名绑定 · 迟到/旷课/请假状态 · 提问前过滤</div>
+        </div>
+        <div style="background:#fff;border:1px solid #c9cff0;border-radius:8px;padding:10px;">
+          <div style="font-weight:600;color:#3a4490;font-size:13px;">📊 评估与报表</div>
+          <div style="font-size:11px;color:#6a6f90;margin-top:4px;">每课表现分 → 课堂报告 → 历史综合分析 → 图表看板</div>
+        </div>
+      </div>
+    </div>
+    <div style="text-align:center;color:#6c7bd8;font-size:18px;line-height:1;margin:2px 0;">▼</div>
+
+    <!-- 第5层：数据层 -->
+    <div style="background:#eceff3;border:1.5px solid #7a8699;border-radius:10px;padding:14px 16px;">
+      <div style="font-size:13px;font-weight:700;color:#4a5568;letter-spacing:1px;">⑤ 数据层</div>
+      <div style="display:flex;gap:10px;margin-top:10px;flex-wrap:wrap;">
+        <div style="flex:1;min-width:130px;background:#fff;border:1px solid #c8d0db;border-radius:8px;padding:9px;text-align:center;font-size:12px;color:#4a5568;">学生档案 + 人脸库</div>
+        <div style="flex:1;min-width:130px;background:#fff;border:1px solid #c8d0db;border-radius:8px;padding:9px;text-align:center;font-size:12px;color:#4a5568;">教材库 + 课程/教案</div>
+        <div style="flex:1;min-width:130px;background:#fff;border:1px solid #c8d0db;border-radius:8px;padding:9px;text-align:center;font-size:12px;color:#4a5568;">行为与考勤日志</div>
+        <div style="flex:1;min-width:130px;background:#fff;border:1px solid #c8d0db;border-radius:8px;padding:9px;text-align:center;font-size:12px;color:#4a5568;">历史评估与成绩</div>
+      </div>
+    </div>
+
+    <!-- 关系说明 -->
+    <div style="margin-top:18px;background:#fff;border:1px dashed #b8c4d6;border-radius:10px;padding:14px 16px;font-size:12.5px;color:#4a5568;line-height:1.8;">
+      <div style="font-weight:700;color:#1f3a5f;margin-bottom:6px;">关键数据流（一次完整上课循环）</div>
+      ① 课程规划 Agent 从教材库生成本节教案与点名册 → ② 课堂 Agent 到点启动，通过 IoT 网关开主摄像头 → ③ 人脸识别把画面中的脸对到花名册，<b>先查考勤状态（请假/迟到/旷课）再决定是否提问</b> → ④ 行为识别把"开小差/举手/回答"信号交给规则引擎打分 → ⑤ 课后自动生成本课表现分，写入历史评估 → ⑥ 评估与报表 Agent 结合历史数据，产出该生综合分析与图表。辅导流程复用 ②③④⑥，只是终端从教室主摄像头换成学生穿戴设备。
+    </div>
+
+  </div>
+</div>
+</html>

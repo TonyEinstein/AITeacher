@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="AI Teacher 常见问题解答：产品功能、部署实施、数据安全、售后服务、硬件设备等。联系我们预约演示，开启 AI 教学新时代。">
+<title>常见问题 · AI Teacher 智能教学引擎</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><circle cx='50' cy='50' r='40' fill='%238b2e2e'/><text x='50' y='62' text-anchor='middle' fill='white' font-size='38'>师</text></svg>">
+<link href="https://miaoda.feishu.cn/fonts/css2?family=Noto+Serif+SC:wght@400;600;700;900&family=Noto+Sans+SC:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#eef1f4;--bg-2:#e4e9ed;--ink:#2b2b2b;--ink-soft:#4a4a4a;--muted:#7a8a96;
+    --cinnabar:#8b2e2e;--cinnabar-deep:#6e2222;--jade:#4a6b5a;--line:rgba(43,43,43,0.08);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{font-family:'Noto Serif SC','Songti SC',serif;color:var(--ink);line-height:1.8;overflow-x:hidden;background:linear-gradient(180deg,#eef1f4 0%,#e8edf0 50%,#eef1f4 100%);-webkit-font-smoothing:antialiased;}
+  body::after{content:'';position:fixed;inset:0;pointer-events:none;z-index:2;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.035'/%3E%3C/svg%3E");}
+  #inkCanvas{position:fixed;top:0;left:0;width:100%;height:100%;z-index:1;pointer-events:none;}
+  .wrap{position:relative;z-index:3;}
+
+  .nav{position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:100;display:flex;align-items:center;gap:36px;padding:14px 32px;border-radius:999px;background:rgba(238,241,244,0.75);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid var(--line);box-shadow:0 8px 32px rgba(43,43,43,0.06);transition:all .5s cubic-bezier(0.32,0.72,0,1);}
+  .nav.scrolled{top:12px;padding:10px 28px;}
+  .nav-logo{font-size:18px;font-weight:700;letter-spacing:4px;}
+  .nav-logo a{color:var(--ink);text-decoration:none;}
+  .nav-links{display:flex;gap:28px;font-size:13px;font-family:'Noto Sans SC',sans-serif;}
+  .nav-links a{color:var(--ink-soft);text-decoration:none;letter-spacing:1px;transition:color .3s;}
+  .nav-links a:hover,.nav-links a.active{color:var(--cinnabar);}
+  .nav-cta{background:var(--cinnabar);color:#fff !important;padding:8px 20px;border-radius:999px;font-size:13px;transition:all .3s;}
+  .nav-cta:hover{background:var(--cinnabar-deep);}
+
+  .hero{min-height:60vh;display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:160px 24px 60px;}
+  .eyebrow{display:inline-block;padding:6px 18px;border-radius:999px;border:1px solid var(--line);font-size:11px;letter-spacing:6px;color:var(--muted);margin-bottom:32px;font-family:'Noto Sans SC',sans-serif;}
+  .hero h1{font-size:clamp(40px,6vw,72px);line-height:1.25;font-weight:900;letter-spacing:6px;margin-bottom:24px;}
+  .hero h1 .accent{color:var(--cinnabar);}
+  .hero p{font-size:clamp(15px,1.4vw,18px);color:var(--ink-soft);max-width:600px;margin:0 auto;line-height:2;}
+
+  section{padding:80px 32px;}
+  .inner{max-width:1000px;margin:0 auto;}
+  .section-head{text-align:center;margin-bottom:56px;}
+  .section-head .eyebrow{margin-bottom:16px;}
+  h2{font-size:clamp(28px,4vw,44px);letter-spacing:6px;line-height:1.25;font-weight:700;}
+
+  .reveal{opacity:0;transform:translateY(40px);filter:blur(6px);transition:opacity 1s cubic-bezier(0.32,0.72,0,1),transform 1s cubic-bezier(0.32,0.72,0,1),filter 1s cubic-bezier(0.32,0.72,0,1);}
+  .reveal.visible{opacity:1;transform:translateY(0);filter:blur(0);}
+
+  /* FAQ 分类标签 */
+  .faq-tabs{display:flex;justify-content:center;gap:12px;margin-bottom:48px;flex-wrap:wrap;}
+  .faq-tab{padding:10px 24px;border-radius:999px;border:1px solid var(--line);background:#fff;font-size:13px;cursor:pointer;transition:all .3s;font-family:'Noto Sans SC',sans-serif;letter-spacing:1px;color:var(--ink-soft);}
+  .faq-tab:hover{border-color:var(--cinnabar);color:var(--cinnabar);}
+  .faq-tab.active{background:var(--cinnabar);color:#fff;border-color:var(--cinnabar);}
+
+  /* FAQ 列表 */
+  .faq-group{margin-bottom:48px;}
+  .faq-group-title{font-size:18px;font-weight:700;margin-bottom:20px;padding-left:16px;border-left:3px solid var(--cinnabar);letter-spacing:2px;}
+  .faq-item{background:#fff;border-radius:16px;margin-bottom:12px;border:1px solid var(--line);overflow:hidden;transition:all .3s;}
+  .faq-item:hover{border-color:rgba(139,46,46,0.3);}
+  .faq-q{padding:20px 28px;cursor:pointer;display:flex;justify-content:space-between;align-items:center;gap:16px;font-family:'Noto Sans SC',sans-serif;}
+  .faq-q .q-text{font-size:15px;font-weight:500;color:var(--ink);line-height:1.6;}
+  .faq-q .q-icon{width:28px;height:28px;border-radius:50%;background:rgba(139,46,46,0.08);display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all .3s;font-size:16px;color:var(--cinnabar);}
+  .faq-item.open .faq-q .q-icon{transform:rotate(45deg);background:var(--cinnabar);color:#fff;}
+  .faq-a{max-height:0;overflow:hidden;transition:max-height .4s ease,padding .4s ease;}
+  .faq-item.open .faq-a{max-height:500px;}
+  .faq-a-inner{padding:0 28px 24px;font-size:14px;color:var(--ink-soft);line-height:2;font-family:'Noto Sans SC',sans-serif;}
+  .faq-a-inner p{margin-bottom:8px;}
+  .faq-a-inner strong{color:var(--ink);}
+
+  /* 联系我们 */
+  .contact-section{background:linear-gradient(180deg,#e4e9ed 0%,#dde4e9 100%);border-radius:48px;margin:0 24px;padding:100px 48px;}
+  .contact-grid{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start;}
+  .contact-info h3{font-size:28px;margin-bottom:16px;letter-spacing:3px;}
+  .contact-info > p{color:var(--ink-soft);font-size:15px;line-height:2;margin-bottom:32px;font-family:'Noto Sans SC',sans-serif;}
+  .contact-item{display:flex;gap:16px;margin-bottom:24px;align-items:flex-start;}
+  .contact-icon{width:48px;height:48px;border-radius:14px;background:#fff;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;border:1px solid var(--line);}
+  .contact-item .label{font-size:12px;color:var(--muted);letter-spacing:2px;margin-bottom:4px;font-family:'Noto Sans SC',sans-serif;}
+  .contact-item .value{font-size:16px;color:var(--ink);font-weight:500;font-family:'Noto Sans SC',sans-serif;}
+
+  .contact-form{background:#fff;border-radius:24px;padding:36px;border:1px solid var(--line);}
+  .form-group{margin-bottom:20px;}
+  .form-group label{display:block;font-size:13px;color:var(--ink-soft);margin-bottom:8px;letter-spacing:1px;font-family:'Noto Sans SC',sans-serif;}
+  .form-group input,.form-group textarea,.form-group select{width:100%;padding:12px 16px;border:1px solid var(--line);border-radius:12px;font-size:14px;font-family:'Noto Sans SC',sans-serif;background:var(--bg);color:var(--ink);transition:all .3s;outline:none;}
+  .form-group input:focus,.form-group textarea:focus,.form-group select:focus{border-color:var(--cinnabar);background:#fff;}
+  .form-group textarea{resize:vertical;min-height:100px;}
+  .form-row{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+  .btn-submit{width:100%;padding:14px;background:var(--cinnabar);color:#fff;border:none;border-radius:12px;font-size:15px;letter-spacing:3px;cursor:pointer;transition:all .3s;font-family:'Noto Sans SC',sans-serif;}
+  .btn-submit:hover{background:var(--cinnabar-deep);}
+  .form-success{display:none;text-align:center;padding:40px 20px;}
+  .form-success .check{width:64px;height:64px;border-radius:50%;background:var(--jade);color:#fff;display:flex;align-items:center;justify-content:center;font-size:28px;margin:0 auto 16px;}
+  .form-success h4{font-size:20px;margin-bottom:8px;}
+  .form-success p{color:var(--muted);font-size:14px;font-family:'Noto Sans SC',sans-serif;}
+
+  footer{padding:48px 32px;text-align:center;border-top:1px solid var(--line);font-family:'Noto Sans SC',sans-serif;}
+  footer p{color:var(--muted);font-size:13px;letter-spacing:1px;}
+  footer a{color:var(--ink-soft);text-decoration:none;margin:0 12px;font-size:13px;}
+  footer a:hover{color:var(--cinnabar);}
+
+  @media(max-width:768px){
+    .nav{gap:16px;padding:10px 20px;}
+    .nav-links{display:none;}
+    .contact-grid{grid-template-columns:1fr;gap:32px;}
+    .form-row{grid-template-columns:1fr;}
+    .contact-section{padding:60px 24px;}
+    section{padding:60px 20px;}
+  }
+</style>
+</head>
+<body>
+<canvas id="inkCanvas"></canvas>
+<div class="wrap">
+
+  <nav class="nav" id="nav">
+    <div class="nav-logo"><a href="官网首页.html">AI Teacher</a></div>
+    <div class="nav-links">
+      <a href="官网首页.html">首页</a>
+      <a href="features.html">功能介绍</a>
+      <a href="cases.html">客户案例</a>
+      <a href="faq.html" class="active">常见问题</a>
+    </div>
+    <a href="#contact" class="nav-cta">联系我们</a>
+  </nav>
+
+  <!-- Hero -->
+  <section class="hero">
+    <span class="eyebrow">FAQ · 常见问题</span>
+    <h1>有问必答，<span class="accent">透明可信</span></h1>
+    <p>关于 AI Teacher 的产品功能、部署实施、数据安全、售后服务等问题，在这里找到答案。</p>
+  </section>
+
+  <!-- FAQ -->
+  <section>
+    <div class="inner">
+      <div class="faq-tabs reveal">
+        <button class="faq-tab active" data-cat="all">全部</button>
+        <button class="faq-tab" data-cat="product">产品功能</button>
+        <button class="faq-tab" data-cat="deploy">部署实施</button>
+        <button class="faq-tab" data-cat="security">数据安全</button>
+        <button class="faq-tab" data-cat="service">售后服务</button>
+        <button class="faq-tab" data-cat="hardware">硬件设备</button>
+      </div>
+
+      <!-- 产品功能 -->
+      <div class="faq-group reveal" data-cat="product">
+        <div class="faq-group-title">产品功能</div>
+        <div class="faq-item">
+          <div class="faq-q"><span class="q-text">AI Teacher 能教哪些科目？</span><span class="q-icon">+</span></div>
+          <div class="faq-a"><div class="faq-a-inner">
+            <p>AI Teacher 支持中小学全学科教学，包括语文、数学、英语、物理、化学、生物、政治、历史、地理等。每个科目可配置独立的 AI 教师 Agent，也可一个 Agent 教授多个科目，按学校需求灵活配置。</p>
+          </div></div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q"><span class="q-text">AI 教师是怎么备课的？需要人工准备课件吗？</span><span class="q-icon">+</span></div>
+          <div class="faq-a"><div class="faq-a-inner">
+            <p>管理员只需上传教材电子版（PDF），AI 自动解析教材内容、生成教学大纲、制作 PPT 课件、撰写讲稿。管理员可审核修改后锁版，AI 按锁版教案授课。也支持管理员手动上传已有课件。</p>
+          </div></div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q"><span class="q-text">课堂上学生举手提问，AI 能识别并回答吗？</span><span class="q-icon">+</span></div>
+          <div class="faq-a"><div class="faq-a-inner">
+            <p>可以。教室摄像头实时识别学生举手动作，AI 自动叫起该学生，通过麦克风接收学生提问，AI 实时思考并语音回答。学生也可通过桌位求助键主动提问。</p>
+          </div></div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q"><span class="q-text">AI 能批改主观题和作文吗？</span><span class="q-icon">+</span></div>
+          <div class="faq-a"><div class="faq-a-inner">
+            <p>客观题（选择、填空）100% 自动判分。主观题（作文、论述、计算题）AI 初评并给出评分与评语，管理员可复核调整。计算题可识别解题步骤，按步骤给分。</p>
+          </div></div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q"><span class="q-text">数字人教师的形象可以定制吗？</span><span class="q-icon">+</span></div>
+          <div class="faq-a"><div class="faq-a-inner">
+            <p>系统内置多种数字人形象与三种教学风格（严肃型、温柔型、幽默型）。如需按学校定制专属数字人形象（如校徽配色、特定人物形象），可提供定制服务，另行收费。</p>
+          </div></div>
+        </div>
+      </div>
+
+      <!-- 部署实施 -->
+      <div class="faq-group reveal" data-cat="deploy">
+        <div class="faq-group-title">部署实施</div>
+        <div class="faq-item">
+          <div class="faq-q"><span class="q-text">部署 AI Teacher 需要学校具备什么条件？</span><span class="q-icon">+</span></div>
+          <div class="faq-a"><div class="faq-a-inner">
+            <p>每个教室需要：投影仪或显示器（已有即可）、稳定网络（主网线 + 建议 4G 备用）、电源。我们提供树莓派盒子、摄像头、麦克风阵列等硬件，通过网线连接教室屏幕。学校无需额外安装软件，盒子开机即自动连接云端服务。</p>
+          </div></div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q"><span class="q-text">部署周期多长？需要学校 IT 人员配合吗？</span><span class="q-icon">+</span></div>
+          <div class="faq-a"><div class="faq-a-inner">
+            <p>单校部署通常 1-2 周完成，包括硬件安装、网络配置、教材上传、系统调试。我们提供全程上门部署服务，学校只需配合提供教室接入与网络环境，无需专业 IT 人员。</p>
+          </div></div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q"><span class="q-text">教室没有电脑可以用吗？</span><span class="q-icon">+</span></div>
+          <div class="faq-a"><div class="faq-a-inner">
+            <p>可以。每个教室只需一个树莓派盒子连接投影仪和网络，无需电脑。盒子预装系统，开机自动连接云端、按课表自动上课。中心服务器统一管理所有教室屏幕。</p>
+          </div></div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q"><span class="q-text">断网了还能上课吗？</span><span class="q-icon">+</span></div>
+          <div class="faq-a"><div class="faq-a-inner">
+            <p>系统采用双链路兜底设计：主网线 + 4G 备用网络自动切换。课前 AI 自动预热缓存本节课内容，即使短暂断网也可讲完本节课。长时间断网时系统会暂停并提示，恢复后自动续课。</p>
+          </div></div>
+        </div>
+      </div>
+
+      <!-- 数据安全 -->
+      <div class="faq-group reveal" data-cat="security">
+        <div class="faq-group-title">数据安全与隐私</div>
+        <div class="faq-item">
+          <div class="faq-q"><span class="q-text">学生的人脸数据和课堂录像安全吗？</span><span class="q-icon">+</span></div>
+          <div class="faq-a"><div class="faq-a-inner">
+            <p>学生人脸数据仅用于课堂出勤识别，加密存储在学校专属数据库中，不用于任何其他用途。课堂录像仅在家长授权后可供家长实时查看，录像存储有明确期限，到期自动删除。所有数据传输采用 TLS 加密。</p>
+          </div></div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q"><span class="q-text">数据存储在哪里？学校能拿到自己的数据吗？</span><span class="q-icon">+</span></div>
+          <div class="faq-a"><div class="faq-a-inner">
+            <p>数据存储在腾讯云服务器，按学校逻辑隔离，每个学校的数据独立存储。学校可随时导出本校所有教学数据（学生信息、成绩、评估报告等），数据所有权归学校所有。</p>
+          </div></div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q"><span class="q-text">不同学校的数据会互相泄露吗？</span><span class="q-icon">+</span></div>
+          <div class="faq-a"><div class="faq-a-inner">
+            <p>不会。系统采用七级角色权限体系，每个学校的数据严格隔离。超级管理员可查看全局运营数据（不含学生个人隐私），学校管理员仅能查看本校数据，越权访问直接拒绝。</p>
+          </div></div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q"><span class="q-text">AI 调用的大模型会把学生数据用于训练吗？</span><span class="q-icon">+</span></div>
+          <div class="faq-a"><div class="faq-a-inner">
+            <p>我们与大模型厂商（DeepSeek、豆包、GLM 等）签订数据保密协议，学生个人信息不会发送给大模型用于训练。AI 教师的核心教学流程与 skill 规则运行在我们自己的服务器上，不依赖第三方。</p>
+          </div></div>
+        </div>
+      </div>
+
+      <!-- 售后服务 -->
+      <div class="faq-group reveal" data-cat="service">
+        <div class="faq-group-title">售后服务</div>
+        <div class="faq-item">
+          <div class="faq-q"><span class="q-text">系统出问题了怎么办？有技术支持吗？</span><span class="q-icon">+</span></div>
+          <div class="faq-a"><div class="faq-a-inner">
+            <p>提供 7×24 小时技术支持热线与在线客服。系统具备自动监控与告警能力，异常情况自动通知运维团队。硬件故障提供备件先行更换服务，确保教学不中断。</p>
+          </div></div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q"><span class="q-text">系统会持续更新吗？更新需要学校操作吗？</span><span class="q-icon">+</span></div>
+          <div class="faq-a"><div class="faq-a-inner">
+            <p>系统持续迭代更新，新增功能与优化自动推送。教室盒子支持 OTA 远程升级，无需学校人工操作，升级过程自动校验、备份、失败回滚，确保不影响正常教学。</p>
+          </div></div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q"><span class="q-text">学校老师需要培训吗？</span><span class="q-icon">+</span></div>
+          <div class="faq-a"><div class="faq-a-inner">
+            <p>部署时提供管理员培训（教材上传、课表配置、作业复核等），通常 2-4 小时即可上手。系统操作界面简洁直观，配有操作手册与视频教程。教师转为"教学督导"角色，通过旁听功能即可参与教学。</p>
+          </div></div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q"><span class="q-text">硬件设备坏了谁负责维修？</span><span class="q-icon">+</span></div>
+          <div class="faq-a"><div class="faq-a-inner">
+            <p>硬件设备提供质保服务，质保期内非人为损坏免费维修或更换。质保期后提供有偿维修服务。我们备有常用硬件备件，可快速更换确保教学不中断。</p>
+          </div></div>
+        </div>
+      </div>
+
+      <!-- 硬件设备 -->
+      <div class="faq-group reveal" data-cat="hardware">
+        <div class="faq-group-title">硬件设备</div>
+        <div class="faq-item">
+          <div class="faq-q"><span class="q-text">教室需要安装哪些硬件？</span><span class="q-icon">+</span></div>
+          <div class="faq-a"><div class="faq-a-inner">
+            <p>每个教室标准配置：树莓派盒子（主控）、双目摄像头（人脸/行为识别）、四麦阵列（收音/噪声检测）、投影仪或显示器（学校已有即可）。可选配置：4G 模块（备用网络）、桌位求助键。</p>
+          </div></div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q"><span class="q-text">课后辅导的智能眼镜和手表是必须的吗？</span><span class="q-icon">+</span></div>
+          <div class="faq-a"><div class="faq-a-inner">
+            <p>不是必须的。课堂教学不需要学生佩戴任何设备。课后一对一辅导服务为可选增值服务，学生佩戴智能眼镜（第一视角采集）和手表（拾音+求助），由学校统一为开通辅导服务的学生配发。</p>
+          </div></div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q"><span class="q-text">硬件是你们提供还是学校自己采购？</span><span class="q-icon">+</span></div>
+          <div class="faq-a"><div class="faq-a-inner">
+            <p>硬件由我们统一提供并预装系统，确保兼容性与稳定性。学校也可自行采购符合规格的硬件，我们提供技术支持与验收标准。推荐使用我们的标准硬件方案，以获得最佳体验与质保服务。</p>
+          </div></div>
+        </div>
+        <div class="faq-item">
+          <div class="faq-q"><span class="q-text">摄像头会一直录像吗？家长能看吗？</span><span class="q-icon">+</span></div>
+          <div class="faq-a"><div class="faq-a-inner">
+            <p>上课期间摄像头实时采集用于人脸识别与行为检测，同时推流至云端供家长实时查看（需家长授权）。录像存储有明确期限，到期自动删除。家长仅能查看自己孩子所在班级的课堂画面。</p>
+          </div></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- 联系我们 -->
+  <section class="contact-section" id="contact">
+    <div class="inner">
+      <div class="section-head reveal">
+        <span class="eyebrow">CONTACT · 联系我们</span>
+        <h2>开启 AI 教学之旅</h2>
+      </div>
+      <div class="contact-grid">
+        <div class="contact-info reveal">
+          <h3>预约演示 / 咨询合作</h3>
+          <p>留下您的联系方式，我们的顾问将在 24 小时内与您联系，为您安排产品演示与定制方案。</p>
+          <div class="contact-item">
+            <div class="contact-icon">📞</div>
+            <div><div class="label">咨询热线</div><div class="value">400-XXX-XXXX</div></div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon">✉️</div>
+            <div><div class="label">商务邮箱</div><div class="value">contact@aiteacher.com</div></div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon">📍</div>
+            <div><div class="label">公司地址</div><div class="value">广东省广州市 · AI Teacher 总部</div></div>
+          </div>
+          <div class="contact-item">
+            <div class="contact-icon">💬</div>
+            <div><div class="label">微信咨询</div><div class="value">扫码添加顾问微信（演示时提供）</div></div>
+          </div>
+        </div>
+        <div class="contact-form reveal">
+          <form id="contactForm">
+            <div class="form-row">
+              <div class="form-group">
+                <label>您的姓名 *</label>
+                <input type="text" name="name" required placeholder="请输入姓名">
+              </div>
+              <div class="form-group">
+                <label>联系电话 *</label>
+                <input type="tel" name="phone" required placeholder="请输入手机号">
+              </div>
+            </div>
+            <div class="form-group">
+              <label>学校/机构名称 *</label>
+              <input type="text" name="school" required placeholder="请输入学校或机构名称">
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>您的身份</label>
+                <select name="role">
+                  <option value="principal">校长/校领导</option>
+                  <option value="director">教务主任</option>
+                  <option value="teacher">教师</option>
+                  <option value="other">其他</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>学校规模</label>
+                <select name="size">
+                  <option value="small">1000人以下</option>
+                  <option value="medium">1000-3000人</option>
+                  <option value="large">3000人以上</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>需求描述</label>
+              <textarea name="message" placeholder="请简要描述您的需求，如关注的功能、部署规模等"></textarea>
+            </div>
+            <button type="submit" class="btn-submit">提交预约 →</button>
+          </form>
+          <div class="form-success" id="formSuccess">
+            <div class="check">✓</div>
+            <h4>提交成功</h4>
+            <p>我们的顾问将在 24 小时内与您联系，请保持电话畅通。</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <div style="margin-bottom:16px;">
+      <a href="官网首页.html">首页</a>
+      <a href="features.html">功能介绍</a>
+      <a href="cases.html">客户案例</a>
+      <a href="faq.html">常见问题</a>
+    </div>
+    <p>© 2026 AI Teacher · 智能教学引擎 · 让每个学生都拥有专属 AI 老师</p>
+  </footer>
+
+</div>
+
+<script>
+// 水墨 Canvas 背景
+(function(){
+  const canvas = document.getElementById('inkCanvas');
+  const ctx = canvas.getContext('2d');
+  let W, H, particles = [];
+  function resize(){ W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+  resize();
+  window.addEventListener('resize', resize);
+  class Particle {
+    constructor(){ this.reset(); }
+    reset(){
+      this.x = Math.random()*W; this.y = Math.random()*H;
+      this.r = Math.random()*60+20;
+      this.vx = (Math.random()-0.5)*0.3; this.vy = (Math.random()-0.5)*0.2;
+      this.alpha = Math.random()*0.04+0.01; this.life = 1;
+      this.decay = Math.random()*0.002+0.001;
+    }
+    update(){
+      this.x += this.vx; this.y += this.vy; this.life -= this.decay;
+      if(this.life <= 0 || this.x < -100 || this.x > W+100 || this.y < -100 || this.y > H+100) this.reset();
+    }
+    draw(){
+      const g = ctx.createRadialGradient(this.x, this.y, 0, this.x, this.y, this.r);
+      g.addColorStop(0, `rgba(139,46,46,${this.alpha*this.life})`);
+      g.addColorStop(1, 'rgba(139,46,46,0)');
+      ctx.fillStyle = g;
+      ctx.beginPath(); ctx.arc(this.x, this.y, this.r, 0, Math.PI*2); ctx.fill();
+    }
+  }
+  for(let i=0;i<20;i++) particles.push(new Particle());
+  function animate(){
+    ctx.clearRect(0,0,W,H);
+    particles.forEach(p => { p.update(); p.draw(); });
+    requestAnimationFrame(animate);
+  }
+  animate();
+})();
+
+// FAQ 手风琴
+document.querySelectorAll('.faq-q').forEach(q => {
+  q.addEventListener('click', () => {
+    const item = q.parentElement;
+    const wasOpen = item.classList.contains('open');
+    document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+    if(!wasOpen) item.classList.add('open');
+  });
+});
+
+// FAQ 分类筛选
+document.querySelectorAll('.faq-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.faq-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    const cat = tab.dataset.cat;
+    document.querySelectorAll('.faq-group').forEach(group => {
+      if(cat === 'all' || group.dataset.cat === cat){
+        group.style.display = 'block';
+      } else {
+        group.style.display = 'none';
+      }
+    });
+  });
+});
+
+// 表单提交
+document.getElementById('contactForm').addEventListener('submit', async function(e){
+  e.preventDefault();
+  const btn = this.querySelector('.btn-submit');
+  btn.textContent = '提交中...';
+  btn.disabled = true;
+  try {
+    const formData = new FormData(this);
+    const payload = {
+      name: formData.get('name') || '',
+      phone: formData.get('phone') || '',
+      company: formData.get('company') || '',
+      message: formData.get('message') || '',
+    };
+    await fetch('http://127.0.0.1:3000/api/v1/leads/public', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+  } catch(err) { console.warn('提交失败:', err); }
+  this.style.display = 'none';
+  document.getElementById('formSuccess').style.display = 'block';
+});
+
+// 滚动揭示
+(function(){
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => { if(entry.isIntersecting){ entry.target.classList.add('visible'); observer.unobserve(entry.target); } });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+})();
+
+window.addEventListener('scroll', () => {
+  const nav = document.getElementById('nav');
+  if(window.scrollY > 50) nav.classList.add('scrolled'); else nav.classList.remove('scrolled');
+});
+</script>
+</body>
+</html>

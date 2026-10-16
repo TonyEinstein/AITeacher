@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<title>AI Teacher 整体架构与数据流图</title>
+<style>
+  body { margin:0; background:#f5f2ea; font-family:"Microsoft YaHei",sans-serif; }
+  .wrap { max-width:1400px; margin:0 auto; padding:30px; }
+  h1 { text-align:center; color:#2c3e50; margin-bottom:5px; }
+  .sub { text-align:center; color:#666; margin-bottom:30px; }
+  svg { width:100%; height:auto; }
+  .legend { display:flex; gap:20px; justify-content:center; margin-top:20px; flex-wrap:wrap; }
+  .legend-item { display:flex; align-items:center; gap:6px; font-size:13px; color:#333; }
+  .legend-box { width:18px; height:18px; border-radius:3px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>AI Teacher 整体架构与数据流图</h1>
+<div class="sub">六层架构 + 核心数据流 + 角色与设备</div>
+<svg viewBox="0 0 1400 1000" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#555"/>
+    </marker>
+    <marker id="arrow-blue" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#2980b9"/>
+    </marker>
+    <marker id="arrow-red" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#c0392b"/>
+    </marker>
+  </defs>
+
+  <!-- 标题：你的云（核心IP） -->
+  <rect x="50" y="20" width="1300" height="280" rx="12" fill="#eaf2f8" stroke="#2980b9" stroke-width="2"/>
+  <text x="70" y="50" font-size="18" font-weight="bold" fill="#1a5276">☁️ 你的云服务器（核心 IP，不外露）</text>
+
+  <!-- L3 AI能力层 -->
+  <rect x="80" y="70" width="280" height="90" rx="8" fill="#fff" stroke="#2980b9"/>
+  <text x="220" y="95" text-anchor="middle" font-size="14" font-weight="bold">L3 AI 能力层</text>
+  <text x="220" y="115" text-anchor="middle" font-size="11" fill="#555">LLM: DeepSeek/豆包/GLM</text>
+  <text x="220" y="132" text-anchor="middle" font-size="11" fill="#555">TTS 腾讯云 · Skill 规则引擎</text>
+  <text x="220" y="149" text-anchor="middle" font-size="11" fill="#555">Agent 调度 · 教学流程</text>
+
+  <!-- L2 业务应用层 -->
+  <rect x="400" y="70" width="320" height="90" rx="8" fill="#fff" stroke="#27ae60"/>
+  <text x="560" y="95" text-anchor="middle" font-size="14" font-weight="bold">L2 业务应用层（插件化）</text>
+  <text x="560" y="115" text-anchor="middle" font-size="11" fill="#555">课堂Agent · 辅导Agent · 备课 · 作业</text>
+  <text x="560" y="132" text-anchor="middle" font-size="11" fill="#555">考试 · 考勤纪律 · 评估 · 报表</text>
+  <text x="560" y="149" text-anchor="middle" font-size="11" fill="#555">驾驶舱 · 题库 · 分享传播</text>
+
+  <!-- L4 IoT网关层 -->
+  <rect x="760" y="70" width="280" height="90" rx="8" fill="#fff" stroke="#8e44ad"/>
+  <text x="900" y="95" text-anchor="middle" font-size="14" font-weight="bold">L4 IoT 设备网关层</text>
+  <text x="900" y="115" text-anchor="middle" font-size="11" fill="#555">设备发现 · 协议适配</text>
+  <text x="900" y="132" text-anchor="middle" font-size="11" fill="#555">音视频流接入 · 状态管理</text>
+  <text x="900" y="149" text-anchor="middle" font-size="11" fill="#555">心跳 · 远程升级</text>
+
+  <!-- L6 数据层 -->
+  <rect x="1080" y="70" width="240" height="90" rx="8" fill="#fff" stroke="#d35400"/>
+  <text x="1200" y="95" text-anchor="middle" font-size="14" font-weight="bold">L6 数据层</text>
+  <text x="1200" y="115" text-anchor="middle" font-size="11" fill="#555">PostgreSQL · Redis</text>
+  <text x="1200" y="132" text-anchor="middle" font-size="11" fill="#555">MinIO 对象存储</text>
+  <text x="1200" y="149" text-anchor="middle" font-size="11" fill="#555">SRS 流媒体</text>
+
+  <!-- 内部箭头 -->
+  <line x1="360" y1="115" x2="400" y2="115" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="720" y1="115" x2="760" y2="115" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
+  <line x1="1040" y1="115" x2="1080" y2="115" stroke="#555" stroke-width="1.5" marker-end="url(#arrow)"/>
+
+  <!-- Super 管理后台 -->
+  <rect x="80" y="200" width="380" height="80" rx="8" fill="#fdebd0" stroke="#d35400"/>
+  <text x="270" y="225" text-anchor="middle" font-size="14" font-weight="bold">Super 管理员后台（你）</text>
+  <text x="270" y="245" text-anchor="middle" font-size="11" fill="#555">开通/停用学校 · 订阅管理 · 用量监控</text>
+  <text x="270" y="262" text-anchor="middle" font-size="11" fill="#555">学校健康度 · 远程升级 · 留资管理</text>
+
+  <!-- 管理后台 -->
+  <rect x="520" y="200" width="380" height="80" rx="8" fill="#e8f8f5" stroke="#16a085"/>
+  <text x="710" y="225" text-anchor="middle" font-size="14" font-weight="bold">学校 Web 管理后台</text>
+  <text x="710" y="245" text-anchor="middle" font-size="11" fill="#555">排课 · 教材上传 · 教案确认 · 作业审批</text>
+  <text x="710" y="262" text-anchor="middle" font-size="11" fill="#555">复核工作台 · 报表驾驶舱 · 巡课</text>
+
+  <!-- 官网 -->
+  <rect x="960" y="200" width="360" height="80" rx="8" fill="#fdedec" stroke="#c0392b"/>
+  <text x="1140" y="225" text-anchor="middle" font-size="14" font-weight="bold">官网（水墨风）</text>
+  <text x="1140" y="245" text-anchor="middle" font-size="11" fill="#555">产品介绍 · 预约演示 · 留资</text>
+  <text x="1140" y="262" text-anchor="middle" font-size="11" fill="#555">SEO · 转化追踪</text>
+
+  <!-- 分割线 -->
+  <line x1="50" y1="320" x2="1350" y2="320" stroke="#bbb" stroke-dasharray="6,4"/>
+  <text x="700" y="345" text-anchor="middle" font-size="13" fill="#888">━━━ 以上在云端（你的服务器），以下在学校/学生端 ━━━</text>
+
+  <!-- L1/L5 教室小盒子（客户端合一） -->
+  <rect x="80" y="380" width="820" height="215" rx="10" fill="#f4ecf7" stroke="#8e44ad"/>
+  <text x="490" y="405" text-anchor="middle" font-size="14" font-weight="bold">L1/L5 教室小盒子（树莓派5，客户端合一，PRD §4.7）</text>
+  <text x="490" y="422" text-anchor="middle" font-size="11" fill="#555">· 连云鉴权 · 接收上课指令</text>
+  <text x="490" y="440" text-anchor="middle" font-size="11" fill="#555">· Live2D 数字人本地渲染 · PPT 本地显示翻页</text>
+  <text x="490" y="458" text-anchor="middle" font-size="11" fill="#555">· USB 摄像头（拍全班）+ 麦克风阵列（拾音+嘈杂度）</text>
+  <text x="490" y="476" text-anchor="middle" font-size="11" fill="#555">· 本地 OpenCV+ONNX 视觉模型（举手/违纪识别）</text>
+  <text x="490" y="494" text-anchor="middle" font-size="11" fill="#555">· 本地 Whisper ASR（语音转文字，只传文本）</text>
+  <text x="490" y="512" text-anchor="middle" font-size="11" fill="#555">· 只上传结构化课堂事件，不传视频流上云</text>
+  <text x="490" y="530" text-anchor="middle" font-size="11" fill="#555">· 推直播流到 SRS（家长在线看课时）</text>
+  <text x="490" y="548" text-anchor="middle" font-size="11" fill="#555">· 双链路兜底（网线+4G）</text>
+  <text x="490" y="570" text-anchor="middle" font-size="11" fill="#c0392b" font-weight="bold">核心逻辑永不落地，加壳防破解</text>
+
+  <!-- 学生穿戴设备 -->
+  <rect x="960" y="380" width="360" height="180" rx="10" fill="#eaf2f8" stroke="#2980b9"/>
+  <text x="1140" y="405" text-anchor="middle" font-size="14" font-weight="bold">学生穿戴设备（辅导用）</text>
+  <text x="1140" y="425" text-anchor="middle" font-size="11" fill="#555">· 智能眼镜（看题/看手写）</text>
+  <text x="1140" y="442" text-anchor="middle" font-size="11" fill="#555">· 耳机/麦克风（听说）</text>
+  <text x="1140" y="459" text-anchor="middle" font-size="11" fill="#555">· 小程序点"开始辅导"接入云端</text>
+  <text x="1140" y="476" text-anchor="middle" font-size="11" fill="#555">· 眼镜画面+声音传云端</text>
+  <text x="1140" y="493" text-anchor="middle" font-size="11" fill="#555">· AI 识别题目→讲解→回答追问</text>
+  <text x="1140" y="510" text-anchor="middle" font-size="11" fill="#555">· 辅导结束出即时评估</text>
+  <text x="1140" y="530" text-anchor="middle" font-size="11" fill="#27ae60" font-weight="bold">24小时随身答疑</text>
+
+  <!-- 微信小程序 -->
+  <rect x="80" y="610" width="1240" height="120" rx="10" fill="#e8f8f5" stroke="#16a085"/>
+  <text x="700" y="635" text-anchor="middle" font-size="14" font-weight="bold">微信小程序（三模式）</text>
+  <rect x="110" y="650" width="380" height="65" rx="6" fill="#fff" stroke="#16a085"/>
+  <text x="300" y="672" text-anchor="middle" font-size="12" font-weight="bold">学生模式</text>
+  <text x="300" y="690" text-anchor="middle" font-size="11" fill="#555">作业/成绩/排名/错题本/请假</text>
+  <text x="300" y="705" text-anchor="middle" font-size="11" fill="#555">辅导记录/个人中心</text>
+  <rect x="510" y="650" width="380" height="65" rx="6" fill="#fff" stroke="#16a085"/>
+  <text x="700" y="672" text-anchor="middle" font-size="12" font-weight="bold">家长模式</text>
+  <text x="700" y="690" text-anchor="middle" font-size="11" fill="#555">实时看课/成绩排名/作业完成</text>
+  <text x="700" y="705" text-anchor="middle" font-size="11" fill="#555">留言/情绪状态/满意度问卷</text>
+  <rect x="910" y="650" width="380" height="65" rx="6" fill="#fff" stroke="#16a085"/>
+  <text x="1100" y="672" text-anchor="middle" font-size="12" font-weight="bold">教师/管理员模式</text>
+  <text x="1100" y="690" text-anchor="middle" font-size="11" fill="#555">全班看课/作业复核/请假审批</text>
+  <text x="1100" y="705" text-anchor="middle" font-size="11" fill="#555">成绩报表/巡课旁听</text>
+
+  <!-- 数据流箭头标注 -->
+  <text x="700" y="780" text-anchor="middle" font-size="15" font-weight="bold" fill="#2c3e50">核心数据流</text>
+
+  <!-- 数据流1：备课 -->
+  <rect x="80" y="800" width="280" height="80" rx="6" fill="#eaf2f8" stroke="#2980b9"/>
+  <text x="220" y="825" text-anchor="middle" font-size="12" font-weight="bold">① 备课流程</text>
+  <text x="220" y="845" text-anchor="middle" font-size="11" fill="#555">老师传教材→AI拆大纲</text>
+  <text x="220" y="862" text-anchor="middle" font-size="11" fill="#555">→生成PPT讲稿→老师确认锁版</text>
+
+  <!-- 数据流2：上课 -->
+  <rect x="390" y="800" width="280" height="80" rx="6" fill="#e8f8f5" stroke="#16a085"/>
+  <text x="530" y="825" text-anchor="middle" font-size="12" font-weight="bold">② 上课流程</text>
+  <text x="530" y="845" text-anchor="middle" font-size="11" fill="#555">到点开课→数字人按稿讲</text>
+  <text x="530" y="862" text-anchor="middle" font-size="11" fill="#555">→实时识别举手/违纪→即兴互动</text>
+
+  <!-- 数据流3：作业 -->
+  <rect x="700" y="800" width="280" height="80" rx="6" fill="#fdebd0" stroke="#d35400"/>
+  <text x="840" y="825" text-anchor="middle" font-size="12" font-weight="bold">③ 作业流程</text>
+  <text x="840" y="845" text-anchor="middle" font-size="11" fill="#555">AI生成→老师确认→推小程序</text>
+  <text x="840" y="862" text-anchor="middle" font-size="11" fill="#555">→学生拍照提交→AI批改→老师复核</text>
+
+  <!-- 数据流4：评估 -->
+  <rect x="1010" y="800" width="280" height="80" rx="6" fill="#f4ecf7" stroke="#8e44ad"/>
+  <text x="1150" y="825" text-anchor="middle" font-size="12" font-weight="bold">④ 评估与分享</text>
+  <text x="1150" y="845" text-anchor="middle" font-size="11" fill="#555">课后自动打分→综合报告</text>
+  <text x="1150" y="862" text-anchor="middle" font-size="11" fill="#555">→小程序分享朋友圈→获客</text>
+
+  <!-- 垂直连接箭头 -->
+  <line x1="270" y1="595" x2="270" y2="610" stroke="#2980b9" stroke-width="2" marker-end="url(#arrow-blue)"/>
+  <line x1="710" y1="595" x2="710" y2="610" stroke="#2980b9" stroke-width="2" marker-end="url(#arrow-blue)"/>
+  <line x1="1140" y1="560" x2="1140" y2="610" stroke="#2980b9" stroke-width="2" marker-end="url(#arrow-blue)"/>
+
+  <!-- 云到客户端箭头 -->
+  <line x1="270" y1="280" x2="270" y2="380" stroke="#c0392b" stroke-width="2" marker-end="url(#arrow-red)"/>
+  <line x1="710" y1="280" x2="710" y2="380" stroke="#c0392b" stroke-width="2" marker-end="url(#arrow-red)"/>
+
+</svg>
+
+<div class="legend">
+  <div class="legend-item"><div class="legend-box" style="background:#eaf2f8;border:1px solid #2980b9"></div>云端核心（IP保护）</div>
+  <div class="legend-item"><div class="legend-box" style="background:#fdebd0;border:1px solid #d35400"></div>本地/学校端</div>
+  <div class="legend-item"><div class="legend-box" style="background:#e8f8f5;border:1px solid #16a085"></div>用户端</div>
+  <div class="legend-item"><div class="legend-box" style="background:#f4ecf7;border:1px solid #8e44ad"></div>展示层</div>
+</div>
+</div>
+</body>
+</html>

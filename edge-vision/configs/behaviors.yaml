@@ -1,0 +1,75 @@
+# 10 类行为定义
+# 违纪行为会触发录像+拍照，正常行为只计数
+
+behaviors:
+  focus:
+    label_id: 0
+    category: normal
+    evidence: false
+    description: 专注听课
+
+  hand_raise:
+    label_id: 1
+    category: normal
+    evidence: false
+    description: 举手
+
+  writing:
+    label_id: 2
+    category: normal
+    evidence: false
+    description: 低头写字/记笔记
+
+  standing:
+    label_id: 3
+    category: normal
+    evidence: false
+    description: 起立
+
+  sleeping:
+    label_id: 4
+    category: violation
+    evidence: true
+    description: 趴桌/睡觉
+
+  using_phone:
+    label_id: 5
+    category: violation
+    evidence: true
+    description: 玩手机
+
+  talking:
+    label_id: 6
+    category: violation
+    evidence: true
+    description: 交头接耳/说话
+
+  eating:
+    label_id: 7
+    category: violation
+    evidence: true
+    description: 吃东西
+
+  leaving_seat:
+    label_id: 8
+    category: violation
+    evidence: true
+    description: 离开座位（规则组合判定）
+
+  walking:
+    label_id: 9
+    category: violation_conditional
+    evidence: true
+    grace_period_after_start_sec: 15
+    description: 走动（上课 15 分钟后才触发）
+
+# 每分钟聚合统计包含的行为
+aggregate_behaviors:
+  - focus
+  - hand_raise
+  - writing
+  - talking
+  - sleeping
+  - using_phone
+  - eating
+  - leaving_seat

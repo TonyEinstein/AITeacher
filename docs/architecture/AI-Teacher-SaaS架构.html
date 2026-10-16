@@ -1,0 +1,104 @@
+<html style="margin:0;padding:0;">
+<title>AI Teacher SaaS 架构 · 核心在云</title>
+<div style="width:100%;box-sizing:border-box;font-family:'Segoe UI','Microsoft YaHei',sans-serif;background:#f5f7fa;padding:24px;">
+  <div style="max-width:1100px;margin:0 auto;">
+
+    <div style="text-align:center;margin-bottom:16px;">
+      <div style="font-size:22px;font-weight:700;color:#1f3a5f;">SaaS 架构：核心在你的云，学校只装瘦客户端</div>
+      <div style="font-size:13px;color:#6b7a90;margin-top:5px;">Skill/教学流程/Agent 大脑不外露 · 学校拿不到源码 · 你按订阅控制</div>
+    </div>
+
+    <!-- 你的云 -->
+    <div style="background:#fff0f0;border:2.5px solid #b23030;border-radius:12px;padding:16px;margin-bottom:8px;box-shadow:0 0 0 4px rgba(178,48,48,0.1);">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <div style="font-size:15px;font-weight:700;color:#b23030;">☁ 你的云服务器（核心 IP 全在这，学校碰不到）</div>
+        <div style="font-size:11px;color:#b23030;background:#ffe0e0;padding:3px 10px;border-radius:10px;">🔒 护城河</div>
+      </div>
+      <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;font-size:11.5px;">
+        <div style="flex:1;min-width:130px;background:#fff;border:1px solid #e8a0a0;border-radius:6px;padding:7px;color:#8a3030;">🧠 所有 Agent 大脑<br><span style="color:#a06060;">课堂/辅导 Agent 逻辑</span></div>
+        <div style="flex:1;min-width:130px;background:#fff;border:1px solid #e8a0a0;border-radius:6px;padding:7px;color:#8a3030;">📏 Skill 规则引擎<br><span style="color:#a06060;">纪律/评分/提问策略</span></div>
+        <div style="flex:1;min-width:130px;background:#fff;border:1px solid #e8a0a0;border-radius:6px;padding:7px;color:#8a3030;">🎓 数字人指令<br><span style="color:#a06060;">形象/口型/手势由教室端本地渲染</span></div>
+        <div style="flex:1;min-width:130px;background:#fff;border:1px solid #e8a0a0;border-radius:6px;padding:7px;color:#8a3030;">📚 教学流程/教案生成<br><span style="color:#a06060;">教材→PPT→讲稿</span></div>
+        <div style="flex:1;min-width:130px;background:#fff;border:1px solid #e8a0a0;border-radius:6px;padding:7px;color:#8a3030;">💳 订阅/学校管理<br><span style="color:#a06060;">谁开通了、用了多少</span></div>
+        <div style="flex:1;min-width:130px;background:#fff;border:1px solid #e8a0a0;border-radius:6px;padding:7px;color:#8a3030;">📡 小程序后端 + 转流<br><span style="color:#a06060;">家长看课、作业 API</span></div>
+      </div>
+    </div>
+
+    <div style="text-align:center;color:#b23030;font-size:15px;margin:4px 0;">↑↓ 互联网（HTTPS）</div>
+
+    <!-- 学校端 -->
+    <div style="background:#eef2ff;border:2px solid #5b6fd8;border-radius:12px;padding:14px;margin-bottom:8px;">
+      <div style="font-size:14.5px;font-weight:700;color:#3a4490;">🏫 学校端（一个学校一个教室客户端，装在每间教室的小盒子里）</div>
+      <div style="font-size:11.5px;color:#5a5f90;margin:5px 0 10px;">小盒子=客户端（树莓派5，出厂预装 Electron）· 用学校账号登录你的云 · 它只是"管道"和"显示器"，没有大脑</div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;">
+        <div style="flex:1;min-width:200px;background:#fff;border:1px solid #aab3e8;border-radius:8px;padding:9px;">
+          <b style="color:#3a4490;">教室小盒子（即客户端）</b><br>
+          <span style="color:#5a5f90;font-size:11px;">
+          · 连你的云，验证学校订阅<br>
+          · 管理本校所有教室<br>
+          · 本地跑视觉识别 + 本地 ASR（转文字）<br>
+          · 只上传结构化课堂事件，不传视频流上云<br>
+          · 本地渲染数字人 + PPT 显示到投影<br>
+          · 家长在线看课时才推一路直播流到云
+          </span>
+        </div>
+        <div style="flex:1;min-width:200px;background:#fff;border:1px solid #aab3e8;border-radius:8px;padding:9px;">
+          <b style="color:#3a4490;">教室里配套的</b><br>
+          <span style="color:#5a5f90;font-size:11px;">
+          · 投影屏<br>
+          · 主摄像头（拍全班）<br>
+          · 麦克风阵列（听学生）<br>
+          · 双链路兜底（网线+4G）
+          </span>
+        </div>
+        <div style="flex:1;min-width:200px;background:#fff;border:1px solid #aab3e8;border-radius:8px;padding:9px;">
+          <b style="color:#3a4490;">微信小程序</b><br>
+          <span style="color:#5a5f90;font-size:11px;">
+          · 学生模式：交作业看成绩<br>
+          · 家长模式：实时看课看排名<br>
+          · 教师模式：全班管理<br>
+          · 直接连你的云，不经过学校
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <!-- 为什么这样保护 IP -->
+    <div style="background:#fff;border:1.5px solid #d8e0ec;border-radius:12px;padding:14px;">
+      <div style="font-size:14px;font-weight:700;color:#1f3a5f;margin-bottom:8px;">为什么学校拿不到你的核心？</div>
+      <table style="width:100%;border-collapse:collapse;font-size:12px;color:#3a4556;">
+        <thead><tr style="background:#eef2f8;">
+          <th style="padding:7px;border:1px solid #d8e0ec;text-align:left;">在学校端（可被拷走的）</th>
+          <th style="padding:7px;border:1px solid #d8e0ec;text-align:left;">在你的云（学校永远碰不到的）</th>
+        </tr></thead>
+        <tbody>
+          <tr>
+            <td style="padding:7px;border:1px solid #d8e0ec;">界面壳、连接逻辑、显示控制</td>
+            <td style="padding:7px;border:1px solid #d8e0ec;background:#fff5f5;">Agent 提示词、Skill 规则、教学流程</td>
+          </tr>
+          <tr>
+            <td style="padding:7px;border:1px solid #d8e0ec;">教室音视频采集与本地识别（只传结构化事件）</td>
+            <td style="padding:7px;border:1px solid #d8e0ec;background:#fff5f5;">LLM 调度策略、数字人参数下发</td>
+          </tr>
+          <tr>
+            <td style="padding:7px;border:1px solid #d8e0ec;">本校学生数据（归学校）</td>
+            <td style="padding:7px;border:1px solid #d8e0ec;background:#fff5f5;">订阅鉴权、计费、多租户逻辑</td>
+          </tr>
+        </tbody>
+      </table>
+      <div style="font-size:11.5px;color:#4a5568;margin-top:10px;line-height:1.8;background:#f7f9fc;border-radius:6px;padding:8px;">
+        <b>即使学校破解了客户端，它拿到的只是个"遥控器"——没有大脑。</b>真正的教学智能全在你的云上，断网或订阅到期，客户端就变成空壳。
+      </div>
+    </div>
+
+    <!-- trade-off 提醒 -->
+    <div style="background:#fff8ec;border:1px solid #f0d090;border-radius:10px;padding:12px;margin-top:12px;">
+      <div style="font-size:13px;font-weight:700;color:#b06a10;">⚠ 这个架构带来的一个必须接受的代价</div>
+      <div style="font-size:12px;color:#8a6a30;margin-top:6px;line-height:1.9;">
+        之前说的"离线可用"现在要让步了——核心在你的云上，<b>学校断网就无法实时上课和互动</b>。
+        折中方案：课前把这节课的 PPT 和数字人讲稿预渲染缓存到学校客户端，断网时只能"放预录内容"（不能即兴点名、不能实时回答学生问题）。你接受这个 trade-off 吗？
+      </div>
+    </div>
+
+  </div>
+</div>

@@ -1,0 +1,359 @@
+{
+	"easycom": {
+		"autoscan": true,
+		"custom": {
+			"^uni-(.*)": "@dcloudio/uni-ui/lib/uni-$1/uni-$1.vue"
+		}
+	},
+	"pages": [
+		// #ifdef H5
+		{
+			"path": "pages-site/index",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "AI Teacher · 智能教学引擎"
+			}
+		},
+		// #endif
+		{
+			"path": "pages/login/index",
+			"style": {
+				"navigationBarTitleText": "登录",
+				"navigationStyle": "custom"
+			}
+		},
+		{
+			"path": "pages/index/index",
+			"style": {
+				"navigationBarTitleText": "首页"
+			}
+		},
+		{
+			"path": "pages/homework/index",
+			"style": {
+				"navigationBarTitleText": "作业"
+			}
+		},
+		{
+			"path": "pages/homework-detail/index",
+			"style": {
+				"navigationBarTitleText": "作业详情"
+			}
+		},
+		{
+			"path": "pages/leave/index",
+			"style": {
+				"navigationBarTitleText": "请假"
+			}
+		},
+		{
+			"path": "pages/scores/index",
+			"style": {
+				"navigationBarTitleText": "成绩"
+			}
+		},
+		{
+			"path": "pages/wrong-book/index",
+			"style": {
+				"navigationBarTitleText": "错题本"
+			}
+		},
+		{
+			"path": "pages/tutoring/index",
+			"style": {
+				"navigationBarTitleText": "AI 一对一辅导"
+			}
+		},
+		{
+			"path": "pages/practice/index",
+			"style": {
+				"navigationBarTitleText": "专项练习"
+			}
+		},
+		{
+			"path": "pages/profile/index",
+			"style": {
+				"navigationBarTitleText": "我的"
+			}
+		},
+		// #ifdef H5
+		{
+			"path": "pages-site/features",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "产品功能 · AI Teacher"
+			}
+		},
+		{
+			"path": "pages-site/cases",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "客户案例 · AI Teacher"
+			}
+		},
+		{
+			"path": "pages-site/about",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "关于我们 · AI Teacher"
+			}
+		},
+		{
+			"path": "pages-site/contact",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "联系我们 · AI Teacher"
+			}
+		},
+		{
+			"path": "pages-site/faq",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "常见问题 · AI Teacher"
+			}
+		},
+		{
+			"path": "pages-site/privacy",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "隐私政策 · AI Teacher"
+			}
+		},
+		{
+			"path": "pages-site/terms",
+			"style": {
+				"navigationStyle": "custom",
+				"navigationBarTitleText": "用户协议 · AI Teacher"
+			}
+		}
+		// #endif
+	],
+	"subPackages": [
+		{
+			"root": "pages-admin",
+			"pages": [
+				{
+					"path": "dashboard/index",
+					"style": {
+						"navigationBarTitleText": "管理概览",
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "schools/index",
+					"style": {
+						"navigationBarTitleText": "学校管理",
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "organization/index",
+					"style": {
+						"navigationBarTitleText": "组织架构",
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "group-overview/index",
+					"style": {
+						"navigationBarTitleText": "跨校区汇总",
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "textbooks/index",
+					"style": {
+						"navigationBarTitleText": "教材教案",
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "schedules/index",
+					"style": {
+						"navigationBarTitleText": "课表管理",
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "assignments/index",
+					"style": {
+						"navigationBarTitleText": "作业复核",
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "teacher-workload/index",
+					"style": {
+						"navigationBarTitleText": "教师工作量",
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "reports/exams/index",
+					"style": {
+						"navigationBarTitleText": "考试管理",
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "reports/index/index",
+					"style": {
+						"navigationBarTitleText": "报表驾驶舱",
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "question-bank/index",
+					"style": {
+						"navigationBarTitleText": "学科题库",
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "devices/index",
+					"style": {
+						"navigationBarTitleText": "设备管理",
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "device-monitor/index",
+					"style": {
+						"navigationBarTitleText": "设备监控",
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "face-library/index",
+					"style": {
+						"navigationBarTitleText": "人脸库管理",
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "live/index",
+					"style": {
+						"navigationBarTitleText": "巡课旁听",
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "vision/lesson-events",
+					"style": {
+						"navigationBarTitleText": "课堂违纪事件",
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "vision/lesson-report",
+					"style": {
+						"navigationBarTitleText": "课堂行为分析",
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "leave-approval/index",
+					"style": {
+						"navigationBarTitleText": "请假审批",
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "tutoring/index",
+					"style": {
+						"navigationBarTitleText": "个性化辅导",
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "leads/index",
+					"style": {
+						"navigationBarTitleText": "咨询留资",
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "work-orders/index",
+					"style": {
+						"navigationBarTitleText": "售后工单",
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "surveys/index",
+					"style": {
+						"navigationBarTitleText": "满意度问卷",
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "student-report/index",
+					"style": {
+						"navigationBarTitleText": "学生学情报告",
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "roi/index",
+					"style": {
+						"navigationBarTitleText": "成本效益 ROI",
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "alerts/index",
+					"style": {
+						"navigationBarTitleText": "预警中心",
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "health/index",
+					"style": {
+						"navigationBarTitleText": "学校健康",
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "subscription/index",
+					"style": {
+						"navigationBarTitleText": "订阅管理",
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "site-config/index",
+					"style": {
+						"navigationBarTitleText": "官网设置",
+						"navigationStyle": "custom"
+					}
+				},
+				{
+					"path": "avatars/index",
+					"style": {
+						"navigationBarTitleText": "数字人形象",
+						"navigationStyle": "custom"
+					}
+				}
+			]
+		}
+	],
+	"tabBar": {
+		"color": "#6b7280",
+		"selectedColor": "#1e3a5f",
+		"backgroundColor": "#ffffff",
+		"borderStyle": "black",
+		"list": [
+			{ "pagePath": "pages/index/index", "text": "首页" },
+			{ "pagePath": "pages/homework/index", "text": "作业" },
+			{ "pagePath": "pages/scores/index", "text": "成绩" },
+			{ "pagePath": "pages/profile/index", "text": "我的" }
+		]
+	},
+	"globalStyle": {
+		"navigationBarTextStyle": "white",
+		"navigationBarTitleText": "AI Teacher",
+		"navigationBarBackgroundColor": "#1e3a5f",
+		"backgroundColor": "#F5F6FA"
+	}
+}

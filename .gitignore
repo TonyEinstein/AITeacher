@@ -1,0 +1,99 @@
+# ====================
+# AI Teacher 项目 .gitignore
+# ====================
+
+# 依赖目录
+node_modules/
+**/node_modules/
+venv/
+.venv/
+
+# 工具运行目录（豆包工作区记忆，不入库）
+.workbuddy-ai/
+
+# 构建产物
+dist/
+build/
+out/
+*.tsbuildinfo
+
+# 环境变量
+.env
+.env.local
+.env.*.local
+infra/env/.env
+
+# IDE 配置
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# 日志
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# 数据库
+*.sqlite
+*.sqlite3
+
+# Docker
+docker-compose.override.yml
+
+# 临时文件
+*.tmp
+*.bak
+*.backup
+
+# 树莓派构建产物
+*.deb
+*.rpm
+*.AppImage
+*.snap
+
+# 微信小程序
+miniprogram/node_modules/
+miniprogram/dist/
+
+# 大文件（>100MB）
+*.zip
+*.tar.gz
+*.rar
+*.7z
+
+# 数据集（几十 GB，不入库）
+# 注意：必须排除「目录内容」而非目录本身，否则下面的 ! 无法重新包含其中的脚本
+#（git 规则：父目录被排除时，无法 re-include 其内文件）
+datasets/*
+# 数据集处理脚本入库（体积极小、有复用价值）
+!datasets/*.py
+!datasets/*.md
+**/.cache/
+
+# 模型权重
+*.pt
+*.pth
+*.onnx
+*.safetensors
+
+__pycache__/
+*.pyc
+
+# Superpowers / 门禁工具运行目录（本地工具链，不入库）
+.stagegate/
+.superpowers/
+.genflow_tmp/
+.playwright-mcp/
+
+# Impeccable 设计工作流产物（审计截图/构建状态，开发期生成，不入库）
+.impeccable/
+
+# 会话历史记忆（含对话摘要，不入库）
+.remember/
+
+# 本地归档（旧版代码实体，不入库；git 历史中的版本在 bundle 备份里）
+/archive/

@@ -1,0 +1,53 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "AI Teacher",
+  "version": "1.0.0",
+  "identifier": "com.aiteacher.desktop",
+  "build": {
+    "frontendDist": "../../mobile/dist/build/h5",
+    "devUrl": "http://localhost:5175"
+  },
+  "app": {
+    "windows": [
+      {
+        "label": "main",
+        "title": "AI Teacher",
+        "width": 1280,
+        "height": 820,
+        "minWidth": 960,
+        "minHeight": 600,
+        "resizable": true,
+        "center": true
+      }
+    ],
+    "security": {
+      "csp": null
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["nsis"],
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ],
+    "windows": {
+      "nsis": {
+        "installMode": "currentUser",
+        "languages": ["SimpChinese", "English"]
+      }
+    }
+  },
+  "plugins": {
+    "updater": {
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDVCRjkwRDlDNzk2NDIyNDMKUldSREltUjVuQTM1VzFJTC8rRjkraWM4SzRUU0VWZmszOC9pclVRT25IRUQxek85RHdRdUovcnUK",
+      "endpoints": [
+        "https://updates.aiteacher.app/{{target}}/{{arch}}/{{current_version}}"
+      ],
+      "dialog": true
+    }
+  }
+}

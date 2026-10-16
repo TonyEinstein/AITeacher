@@ -1,0 +1,21 @@
+# AI Teacher 教室端（Electron 授课界面）systemd 单元
+# 树莓派开机即进入全屏授课界面（Kiosk 模式）
+# 部署位置：/etc/systemd/system/ait-classroom.service
+
+[Unit]
+Description=AI Teacher Classroom Client (Electron Kiosk)
+After=graphical.target network-online.target ait-vision.service
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=pi
+Environment=DISPLAY=:0
+Environment=NODE_ENV=production
+WorkingDirectory=/opt/ait-teacher/classroom-client
+ExecStart=/opt/ait-teacher/classroom-client/node_modules/.bin/electron dist-electron/main.cjs
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=graphical.target

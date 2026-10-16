@@ -1,0 +1,126 @@
+<html style="margin:0;padding:0;">
+<title>AI Teacher 部署架构（对齐 PRD v1.0 · 云 SaaS）</title>
+<div style="width:100%;box-sizing:border-box;font-family:'Segoe UI','Microsoft YaHei',sans-serif;background:#f5f7fa;padding:24px;">
+  <div style="max-width:1140px;margin:0 auto;">
+
+    <div style="text-align:center;margin-bottom:16px;">
+      <div style="font-size:22px;font-weight:700;color:#1f3a5f;">部署架构：核心在云端 · 学校只装瘦客户端</div>
+      <div style="font-size:13px;color:#6b7a90;margin-top:5px;">你的云服务器跑全部核心 Agent/调度 · 教室小盒子（树莓派5）本地渲染 + 本地视觉/ASR · 学校免运维</div>
+      <div style="font-size:11.5px;color:#b23030;margin-top:4px;">▲ 本文按 PRD v1.0（§4.2/§4.6/§4.7/§6/§23.5）修订：原 v3"学校机房单机 FastAPI + SQLite + 教室瘦终端"为已废弃候选方案，不再使用</div>
+    </div>
+
+    <!-- 你的云 -->
+    <div style="display:flex;justify-content:center;margin-bottom:4px;">
+      <div style="background:#fff0f0;border:2.5px solid #b23030;border-radius:12px;padding:16px 24px;text-align:center;min-width:420px;box-shadow:0 0 0 4px rgba(178,48,48,0.12);">
+        <div style="font-size:15px;font-weight:700;color:#b23030;">☁ 你的云服务器（核心 IP 全在这，学校碰不到）</div>
+        <div style="font-size:12px;color:#8a4040;margin-top:8px;line-height:1.9;text-align:left;">
+          <b>后端（NestJS + TypeScript + Prisma + BullMQ）</b><br>
+          · 数据库：腾讯云托管 PostgreSQL 16（主库）<br>
+          · Redis / MinIO / SRS 自建 Docker 跑在 CVM<br>
+          · 所有 Agent 调度 / Skill 规则引擎 / 教案与讲稿生成<br>
+          · LLM 统一走第三方 API（Key 由你后台配置）<br>
+          · 订阅鉴权 / 计费 / 多租户 / 家长看课转流<br>
+          · 数字人只发指令：形象/口型/手势由教室端本地渲染
+        </div>
+      </div>
+    </div>
+
+    <div style="text-align:center;color:#b23030;font-size:15px;margin:6px 0;">↑↓ 互联网（HTTPS，双链路兜底：网线 + 4G）</div>
+
+    <!-- 一排教室 -->
+    <div style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-bottom:14px;">
+
+      <div style="flex:1;min-width:200px;background:#eef2ff;border:2px solid #5b6fd8;border-radius:10px;padding:10px;">
+        <div style="font-size:12.5px;font-weight:700;color:#3a4490;">🏫 教室 1 号</div>
+        <div style="font-size:11px;color:#5a5f90;margin-top:5px;line-height:1.8;">
+          📽 投影屏（本地渲染数字人+PPT）<br>
+          📷 主摄像头（拍全班，本地视觉识别）<br>
+          🎤 麦克风阵列（本地 ASR 转文字）<br>
+          📦 小盒子 = 教室客户端（树莓派5，出厂预装 Electron）
+        </div>
+      </div>
+
+      <div style="flex:1;min-width:200px;background:#eef2ff;border:2px solid #5b6fd8;border-radius:10px;padding:10px;">
+        <div style="font-size:12.5px;font-weight:700;color:#3a4490;">🏫 教室 2 号</div>
+        <div style="font-size:11px;color:#5a5f90;margin-top:5px;line-height:1.8;">
+          📽 投影屏（本地渲染数字人+PPT）<br>
+          📷 主摄像头（拍全班，本地视觉识别）<br>
+          🎤 麦克风阵列（本地 ASR 转文字）<br>
+          📦 小盒子 = 教室客户端（树莓派5，出厂预装 Electron）
+        </div>
+      </div>
+
+      <div style="flex:1;min-width:200px;background:#eef2ff;border:2px solid #5b6fd8;border-radius:10px;padding:10px;">
+        <div style="font-size:12.5px;font-weight:700;color:#3a4490;">🏫 教室 3 号</div>
+        <div style="font-size:11px;color:#5a5f90;margin-top:5px;line-height:1.8;">
+          📽 投影屏<br>
+          📷 主摄像头<br>
+          🎤 麦克风阵列<br>
+          📦 小盒子（出厂预装好，插线即用）
+        </div>
+      </div>
+
+      <div style="flex:0.8;min-width:120px;background:#f7f9fc;border:2px dashed #aab3c5;border-radius:10px;padding:10px;display:flex;align-items:center;justify-content:center;">
+        <div style="font-size:12px;color:#7a8699;text-align:center;">……<br>所有教室<br>编号提前录入</div>
+      </div>
+    </div>
+
+    <!-- 四类用户 -->
+    <div style="display:flex;gap:12px;flex-wrap:wrap;">
+      <div style="flex:1;min-width:200px;background:#e0f5ec;border:2px solid #1fa876;border-radius:10px;padding:11px;">
+        <div style="font-size:13px;font-weight:700;color:#0f6b48;">📱 学生手机（小程序·学生模式）</div>
+        <div style="font-size:11px;color:#3a7a60;margin-top:5px;line-height:1.8;">
+          收/交作业 · 看评分评估 · 看进度 · 请假 · 发起辅导答疑
+        </div>
+      </div>
+      <div style="flex:1;min-width:200px;background:#e0f5ec;border:2px solid #1fa876;border-radius:10px;padding:11px;">
+        <div style="font-size:13px;font-weight:700;color:#0f6b48;">👨‍👩‍👧 家长手机（小程序·家长模式）</div>
+        <div style="font-size:11px;color:#3a7a60;margin-top:5px;line-height:1.8;">
+          实时看课（孩子所在教室直播）· 成绩排名 · 作业情况 · 留言 · 情绪状态
+        </div>
+      </div>
+      <div style="flex:1;min-width:200px;background:#f0f7ff;border:2px solid #4a90d9;border-radius:10px;padding:11px;">
+        <div style="font-size:13px;font-weight:700;color:#2a6bb0;">💻 教师/管理员移动端（小程序·教师模式 + Web 后台）</div>
+        <div style="font-size:11px;color:#4a6a90;margin-top:5px;line-height:1.8;">
+          作业复核 · 请假审批 · 巡课旁听 · 全班报表；重操作（排课/传教材/配规则）在 Web 后台
+        </div>
+      </div>
+      <div style="flex:1;min-width:200px;background:#fff3e0;border:2px solid #e08a2e;border-radius:10px;padding:11px;">
+        <div style="font-size:13px;font-weight:700;color:#b06a10;">⌚ 辅导设备（穿戴）</div>
+        <div style="font-size:11px;color:#8a6a30;margin-top:5px;line-height:1.8;">
+          学生眼镜/手表/耳机 · 小程序点"开始辅导"接入云端辅导 Agent（一人一实例）
+        </div>
+      </div>
+    </div>
+
+    <!-- 权限下推 -->
+    <div style="background:#fff;border:1.5px solid #d8e0ec;border-radius:12px;padding:16px;margin-top:14px;">
+      <div style="font-size:15px;font-weight:700;color:#1f3a5f;margin-bottom:10px;">权限怎么下推（PRD §3.32/§8.7）</div>
+      <div style="display:flex;gap:8px;align-items:stretch;flex-wrap:wrap;font-size:12px;">
+        <div style="flex:1;min-width:160px;background:#fff0f0;border:1.5px solid #e07070;border-radius:8px;padding:9px;text-align:center;">
+          <b style="color:#b23030;">👑 Super 管理员（你/总部）</b><br><span style="color:#8a5a5a;font-size:11px;">云后台跨校管理：开通/停用订阅、看全校用量、远程升级</span>
+        </div>
+        <div style="display:flex;align-items:center;color:#b23030;">→</div>
+        <div style="flex:2.2;min-width:280px;display:flex;gap:6px;flex-wrap:wrap;">
+          <div style="flex:1;min-width:110px;background:#fff;border:1px solid #e8a0a0;border-radius:6px;padding:7px;text-align:center;font-size:11px;color:#8a4040;">学校管理员<br><span style="color:#b08080;">本校全局：排课/订阅核对/报表</span></div>
+          <div style="flex:1;min-width:110px;background:#fff;border:1px solid #e8a0a0;border-radius:6px;padding:7px;text-align:center;font-size:11px;color:#8a4040;">年级×科目老师<br><span style="color:#b08080;">管自己年级本科：教材/作业审批/看课</span></div>
+          <div style="flex:1;min-width:110px;background:#fff;border:1px dashed #c8a0a0;border-radius:6px;padding:7px;text-align:center;font-size:11px;color:#a08080;">…学生/家长只进小程序对应模式</div>
+        </div>
+      </div>
+      <div style="font-size:11.5px;color:#4a5568;margin-top:10px;line-height:1.8;background:#f7f9fc;border-radius:6px;padding:8px;">
+        每个代表老师登录后，<b>只能看到自己年级本科的内容</b>：管自己的教材、课表、教室、作业审批。看不到别的年级别的科。API Key 全部由你（总部）在云后台配置，学校端任何角色都碰不到。
+      </div>
+    </div>
+
+    <!-- 技术现实提醒 -->
+    <div style="background:#fff8ec;border:1px solid #f0d090;border-radius:10px;padding:13px;margin-top:12px;">
+      <div style="font-size:13px;font-weight:700;color:#b06a10;">⚠ 教室小盒子说明（PRD §4.7 修正1）</div>
+      <div style="font-size:12px;color:#8a6a30;margin-top:6px;line-height:1.9;">
+        小盒子与教室客户端<b>是同一台设备</b>：树莓派5 出厂预装 Electron（客户端），本地跑视觉模型（OpenCV+ONNX）、本地 ASR（Whisper）和本地 TTS，HDMI 接投影。
+        上课画面（PPT+数字人）由教室端本地渲染，云端只发指令；课中只上传结构化课堂事件，不传视频流上云；仅家长在线看课时推一路直播流到云端 SRS 转播。
+        施工时只负责插网线、插投影线、插摄像头——<b>不需要老师现场装软件、开投影、拉课件</b>。
+      </div>
+    </div>
+
+  </div>
+</div>

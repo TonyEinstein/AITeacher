@@ -1,0 +1,120 @@
+<html style="margin:0;padding:0;">
+<title>AI Teacher 物理网络拓扑</title>
+<div style="width:100%;box-sizing:border-box;font-family:'Segoe UI','Microsoft YaHei',sans-serif;background:#f5f7fa;padding:24px;">
+  <div style="max-width:1100px;margin:0 auto;">
+
+    <div style="text-align:center;margin-bottom:16px;">
+      <div style="font-size:22px;font-weight:700;color:#1f3a5f;">物理网络拓扑：服务器 → 楼层交换机 → 教室小盒子</div>
+      <div style="font-size:13px;color:#6b7a90;margin-top:5px;">每间教室一根网线 · 服务器不用拉视频线 · 年级用楼层交换机划分</div>
+    </div>
+
+    <!-- 服务器层 -->
+    <div style="display:flex;justify-content:center;margin-bottom:6px;">
+      <div style="background:#fff3e0;border:2.5px solid #e08a2e;border-radius:10px;padding:12px 20px;text-align:center;min-width:300px;">
+        <div style="font-size:14px;font-weight:700;color:#b06a10;">☁ 你的云服务器（核心 IP 全在这）</div>
+        <div style="font-size:11px;color:#8a6a30;margin-top:4px;">跑后端+数据库+所有 Agent+Skill 规则引擎；数字人/PPT 由教室端本地渲染，云端只发指令</div>
+      </div>
+    </div>
+
+    <!-- 核心交换机 -->
+    <div style="display:flex;justify-content:center;margin:6px 0;">
+      <div style="background:#e0e7ff;border:2px solid #6c7bd8;border-radius:8px;padding:8px 20px;text-align:center;">
+        <div style="font-size:12.5px;font-weight:700;color:#3a4490;">🔀 核心交换机（机房）</div>
+      </div>
+    </div>
+    <div style="text-align:center;color:#6c7bd8;font-size:14px;">│ 一根网线</div>
+
+    <!-- 楼层交换机（按年级） -->
+    <div style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin:6px 0 10px;">
+      <div style="background:#e0f5ec;border:2px solid #1fa876;border-radius:8px;padding:10px 16px;text-align:center;">
+        <div style="font-size:12.5px;font-weight:700;color:#0f6b48;">🌿 高一楼层交换机</div>
+        <div style="font-size:10.5px;color:#3a7a60;">（高一所有教室的线都汇总到这）</div>
+      </div>
+      <div style="background:#e0f5ec;border:2px solid #1fa876;border-radius:8px;padding:10px 16px;text-align:center;">
+        <div style="font-size:12.5px;font-weight:700;color:#0f6b48;">🌿 高二楼层交换机</div>
+        <div style="font-size:10.5px;color:#3a7a60;">（高二所有教室的线都汇总到这）</div>
+      </div>
+      <div style="background:#e0f5ec;border:2px solid #1fa876;border-radius:8px;padding:10px 16px;text-align:center;">
+        <div style="font-size:12.5px;font-weight:700;color:#0f6b48;">🌿 高三楼层交换机</div>
+        <div style="font-size:10.5px;color:#3a7a60;">（高三所有教室的线都汇总到这）</div>
+      </div>
+    </div>
+
+    <!-- 每个楼层交换机下面挂几个教室 -->
+    <div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;">
+
+      <div style="flex:1;min-width:260px;background:#fff;border:1.5px solid #7fd0b0;border-radius:10px;padding:12px;">
+        <div style="font-size:12.5px;font-weight:700;color:#0f6b48;text-align:center;margin-bottom:8px;">高一 · 教室（示例）</div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <div style="background:#f7fdfb;border:1px solid #b7e6d3;border-radius:6px;padding:7px;font-size:11.5px;color:#14694a;">
+            <b>教室1</b> · 小盒子 ⇄ 投影+摄像头+麦克风
+          </div>
+          <div style="background:#f7fdfb;border:1px solid #b7e6d3;border-radius:6px;padding:7px;font-size:11.5px;color:#14694a;">
+            <b>教室2</b> · 小盒子 ⇄ 投影+摄像头+麦克风
+          </div>
+          <div style="background:#f7fdfb;border:1px solid #b7e6d3;border-radius:6px;padding:7px;font-size:11.5px;color:#14694a;">
+            <b>教室3</b> · 小盒子 ⇄ 投影+摄像头+麦克风
+          </div>
+        </div>
+      </div>
+
+      <div style="flex:1;min-width:260px;background:#fff;border:1.5px solid #7fd0b0;border-radius:10px;padding:12px;">
+        <div style="font-size:12.5px;font-weight:700;color:#0f6b48;text-align:center;margin-bottom:8px;">高二 · 教室（示例）</div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <div style="background:#f7fdfb;border:1px solid #b7e6d3;border-radius:6px;padding:7px;font-size:11.5px;color:#14694a;">
+            <b>教室101</b> · 小盒子 ⇄ 投影+摄像头+麦克风
+          </div>
+          <div style="background:#f7fdfb;border:1px solid #b7e6d3;border-radius:6px;padding:7px;font-size:11.5px;color:#14694a;">
+            <b>教室102</b> · 小盒子 ⇄ 投影+摄像头+麦克风
+          </div>
+        </div>
+      </div>
+
+      <div style="flex:1;min-width:260px;background:#fff;border:1.5px solid #7fd0b0;border-radius:10px;padding:12px;">
+        <div style="font-size:12.5px;font-weight:700;color:#0f6b48;text-align:center;margin-bottom:8px;">高三 · 教室（示例）</div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <div style="background:#f7fdfb;border:1px solid #b7e6d3;border-radius:6px;padding:7px;font-size:11.5px;color:#14694a;">
+            <b>教室201</b> · 小盒子 ⇄ 投影+摄像头+麦克风
+          </div>
+          <div style="background:#f7fdfb;border:1px solid #b7e6d3;border-radius:6px;padding:7px;font-size:11.5px;color:#14694a;">
+            <b>教室202</b> · 小盒子 ⇄ 投影+摄像头+麦克风
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 一间教室内部接线 -->
+    <div style="background:#fff;border:1.5px solid #d8e0ec;border-radius:12px;padding:14px;margin-top:14px;">
+      <div style="font-size:14px;font-weight:700;color:#1f3a5f;margin-bottom:8px;">一间教室里，线怎么接？</div>
+      <div style="display:flex;gap:10px;align-items:stretch;flex-wrap:wrap;font-size:12px;">
+        <div style="flex:1;min-width:140px;background:#e0e7ff;border:1px solid #aab3e8;border-radius:8px;padding:9px;text-align:center;">
+          <b style="color:#3a4490;">🌐 墙上网线口</b><br><span style="color:#5a5f90;font-size:11px;">（从楼层交换机拉来）</span>
+        </div>
+        <div style="display:flex;align-items:center;color:#6c7bd8;">→</div>
+        <div style="flex:1;min-width:140px;background:#fff3e0;border:1px solid #f0c070;border-radius:8px;padding:9px;text-align:center;">
+          <b style="color:#b06a10;">📦 小盒子</b><br><span style="color:#8a7050;font-size:11px;">（出厂预装好）</span>
+        </div>
+        <div style="display:flex;align-items:center;color:#e08a2e;">→ 出三根短线</div>
+        <div style="flex:2;min-width:240px;display:flex;flex-direction:column;gap:5px;">
+          <div style="background:#eef2ff;border:1px solid #b8c4f0;border-radius:6px;padding:6px 9px;color:#3a4490;font-size:11.5px;">📽 HDMI 短线 → 投影仪/大屏（上课画面）</div>
+          <div style="background:#e0f5ec;border:1px solid #7fd0b0;border-radius:6px;padding:6px 9px;color:#0f6b48;font-size:11.5px;">📷 USB/网线 → 主摄像头（拍全班）</div>
+          <div style="background:#e0f5ec;border:1px solid #7fd0b0;border-radius:6px;padding:6px 9px;color:#0f6b48;font-size:11.5px;">🎤 USB/网线 → 麦克风阵列（听学生）</div>
+        </div>
+      </div>
+      <div style="font-size:11.5px;color:#4a5568;margin-top:10px;line-height:1.8;background:#f7f9fc;border-radius:6px;padding:8px;">
+        <b>关键：一根网线进教室，小盒子一分为三。</b>网线同时干两件事——接收云端下发的上课指令（画面由教室端本地渲染后送投影），把教室本地识别出的结构化课堂事件上传云端（家长在线看课时才额外推一路直播流，见 PRD §4.6②）。不需要从机房拉很长的视频线到教室。
+      </div>
+    </div>
+
+    <!-- 纠正他的一个误解 -->
+    <div style="background:#fff8ec;border:1px solid #f0d090;border-radius:10px;padding:12px;margin-top:12px;">
+      <div style="font-size:13px;font-weight:700;color:#b06a10;">为什么不用"很长的视频线/光纤"直连服务器？</div>
+      <div style="font-size:12px;color:#8a6a30;margin-top:6px;line-height:1.9;">
+        你原想法是把服务器的视频口用长视频线/光纤拉到每间教室。这条路在<b>一台服务器带多间教室</b>时走不通——服务器没那么多 HDMI 口，而且每多一间教室就要多布一根从机房到教室的粗线，成本高、难维护。<br>
+        正确做法就是你后半句说的：<b>走网线到楼层交换机，交换机再到服务器</b>。网线便宜、好布、一间教室一根，同时传指令和课堂事件。小盒子负责本地渲染投影画面，并负责把云端指令转成投影能显示的 HDMI 信号。
+      </div>
+    </div>
+
+  </div>
+</div>

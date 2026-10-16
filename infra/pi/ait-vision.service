@@ -1,0 +1,21 @@
+# AI Teacher 视觉服务（树莓派）systemd 单元
+# 部署位置：/etc/systemd/system/ait-vision.service
+# 启用：sudo systemctl enable --now ait-vision
+
+[Unit]
+Description=AI Teacher Vision Service (face/behavior/audio detection)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=pi
+WorkingDirectory=/opt/ait-teacher/vision-service
+ExecStart=/opt/ait-teacher/venv/bin/python main.py
+Restart=always
+RestartSec=5
+# 双链路网络优先级由系统路由表配置（eth0 主，usb0 4G 备）
+Environment=PYTHONUNBUFFERED=1
+
+[Install]
+WantedBy=multi-user.target

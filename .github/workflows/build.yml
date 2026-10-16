@@ -1,0 +1,58 @@
+name: build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  backend-test:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: backend/package-lock.json
+      - run: npm ci
+      - run: npx prisma generate
+      - run: npx vitest run
+
+  mobile-build:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: apps/mobile
+    strategy:
+      fail-fast: false
+      matrix:
+        target: [h5, mp-weixin, app]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: apps/mobile/package-lock.json
+      - run: npm ci --legacy-peer-deps
+      - name: type-check
+        if: matrix.target == 'h5'
+        run: npm run type-check
+      - name: build
+        run: |
+          if [ "${{ matrix.target }}" = "app" ]; then
+            npx uni build -p app
+          else
+            npm run build:${{ matrix.target }}
+          fi
+      - name: verify artifacts
+        run: |
+          case "${{ matrix.target }}" in
+            h5)        test -f dist/build/h5/index.html ;;
+            mp-weixin) test -f dist/build/mp-weixin/app.json ;;
+            app)       test -f dist/build/app/manifest.json ;;
+          esac

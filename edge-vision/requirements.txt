@@ -1,0 +1,35 @@
+# edge-vision Python 依赖
+# 安装：conda activate ai-teacher && pip install -r requirements.txt
+
+# 核心推理
+torch
+torchvision
+ultralytics
+
+# 图像视频
+opencv-python
+pillow
+numpy
+
+# 数据处理
+pandas
+pyyaml
+tqdm
+matplotlib
+
+# 事件上报与存储
+requests
+minio
+python-dotenv
+pydantic
+
+# 数据集下载
+gdown
+
+# 边缘端 HTTP 服务
+fastapi
+uvicorn
+
+# 模型导出
+onnx
+onnxruntime

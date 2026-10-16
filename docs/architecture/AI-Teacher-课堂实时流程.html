@@ -1,0 +1,143 @@
+<html style="margin:0;padding:0;">
+<title>AI Teacher 课堂实时流程：举手答疑 + 纪律警告</title>
+<div style="width:100%;box-sizing:border-box;font-family:'Segoe UI','Microsoft YaHei',sans-serif;background:#f5f7fa;padding:24px;">
+  <div style="max-width:1100px;margin:0 auto;">
+
+    <div style="text-align:center;margin-bottom:16px;">
+      <div style="font-size:22px;font-weight:700;color:#1f3a5f;">课堂实时流程：举手答疑 & 纪律警告</div>
+      <div style="font-size:13px;color:#6b7a90;margin-top:5px;">都是课中副线：摄像头+麦克风实时感知，虚拟人物当场反应，事后写入档案</div>
+    </div>
+
+    <!-- 流程一：举手答疑 -->
+    <div style="background:#e0f5ec;border:2px solid #1fa876;border-radius:12px;padding:15px;margin-bottom:14px;">
+      <div style="font-size:15px;font-weight:700;color:#0f6b48;">🙋 流程一：学生举手提问</div>
+
+      <div style="display:flex;gap:6px;align-items:stretch;flex-wrap:wrap;margin-top:12px;">
+
+        <div style="flex:1;min-width:110px;background:#fff;border:1.5px solid #7fd0b0;border-radius:8px;padding:8px;text-align:center;">
+          <div style="font-size:18px;">✋</div>
+          <div style="font-size:11.5px;font-weight:700;color:#0f6b48;margin-top:3px;">学生举手</div>
+          <div style="font-size:10px;color:#3a7a60;margin-top:2px;">不懂就举手</div>
+        </div>
+        <div style="display:flex;align-items:center;color:#1fa876;">→</div>
+
+        <div style="flex:1;min-width:110px;background:#fff;border:1.5px solid #7fd0b0;border-radius:8px;padding:8px;text-align:center;">
+          <div style="font-size:18px;">📷</div>
+          <div style="font-size:11.5px;font-weight:700;color:#0f6b48;margin-top:3px;">识别举手动作</div>
+          <div style="font-size:10px;color:#3a7a60;margin-top:2px;">视觉模型检测举手姿势</div>
+        </div>
+        <div style="display:flex;align-items:center;color:#1fa876;">→</div>
+
+        <div style="flex:1;min-width:110px;background:#fff;border:1.5px solid #7fd0b0;border-radius:8px;padding:8px;text-align:center;">
+          <div style="font-size:18px;">😊</div>
+          <div style="font-size:11.5px;font-weight:700;color:#0f6b48;margin-top:3px;">认出是谁</div>
+          <div style="font-size:10px;color:#3a7a60;margin-top:2px;">人脸对到花名册</div>
+        </div>
+        <div style="display:flex;align-items:center;color:#1fa876;">→</div>
+
+        <div style="flex:1;min-width:110px;background:#fff3e0;border:1.5px solid #f0a04b;border-radius:8px;padding:8px;text-align:center;">
+          <div style="font-size:18px;">🧑‍🏫</div>
+          <div style="font-size:11.5px;font-weight:700;color:#b06a10;margin-top:3px;">虚拟人转向他</div>
+          <div style="font-size:10px;color:#8a6a30;margin-top:2px;">"XX，你哪里不懂？"</div>
+        </div>
+        <div style="display:flex;align-items:center;color:#f0a04b;">→</div>
+
+        <div style="flex:1;min-width:110px;background:#fff3e0;border:1.5px solid #f0a04b;border-radius:8px;padding:8px;text-align:center;">
+          <div style="font-size:18px;">🎤</div>
+          <div style="font-size:11.5px;font-weight:700;color:#b06a10;margin-top:3px;">学生说出问题</div>
+          <div style="font-size:10px;color:#8a6a30;margin-top:2px;">收音→语音转文字</div>
+        </div>
+        <div style="display:flex;align-items:center;color:#f0a04b;">→</div>
+
+        <div style="flex:1;min-width:110px;background:#fff3e0;border:1.5px solid #f0a04b;border-radius:8px;padding:8px;text-align:center;">
+          <div style="font-size:18px;">🧠</div>
+          <div style="font-size:11.5px;font-weight:700;color:#b06a10;margin-top:3px;">AI 现场解答</div>
+          <div style="font-size:10px;color:#8a6a30;margin-top:2px;">结合本课内容讲解</div>
+        </div>
+        <div style="display:flex;align-items:center;color:#f0a04b;">→</div>
+
+        <div style="flex:1;min-width:110px;background:#eef2ff;border:1.5px solid #5b6fd8;border-radius:8px;padding:8px;text-align:center;">
+          <div style="font-size:18px;">✅</div>
+          <div style="font-size:11.5px;font-weight:700;color:#3a4490;margin-top:3px;">确认懂了</div>
+          <div style="font-size:10px;color:#5a5f90;margin-top:2px;">"懂了吗？"→ 回到主课</div>
+        </div>
+
+      </div>
+
+      <div style="margin-top:10px;background:#fff;border:1px dashed #7fd0b0;border-radius:6px;padding:8px;font-size:11.5px;color:#3a7a60;line-height:1.8;">
+        <b>边界规则：</b>多个学生同时举手 → AI 按"谁先举的/谁被点名过最少"决定先问谁；学生说不清楚 → 再追问一次；问题与本课无关 → "这个我们课后辅导时间讨论"，不打断主课。
+      </div>
+    </div>
+
+    <!-- 流程二：纪律警告 -->
+    <div style="background:#fff0f0;border:2px solid #e07070;border-radius:12px;padding:15px;">
+      <div style="font-size:15px;font-weight:700;color:#b23030;">⚠️ 流程二：违纪检测与警告</div>
+
+      <div style="display:flex;gap:6px;align-items:stretch;flex-wrap:wrap;margin-top:12px;">
+
+        <div style="flex:1;min-width:110px;background:#fff;border:1.5px solid #e8a0a0;border-radius:8px;padding:8px;text-align:center;">
+          <div style="font-size:18px;">👀</div>
+          <div style="font-size:11.5px;font-weight:700;color:#b23030;margin-top:3px;">检测异常</div>
+          <div style="font-size:10px;color:#8a5a5a;margin-top:2px;">大声说话/走动/离座/睡觉</div>
+        </div>
+        <div style="display:flex;align-items:center;color:#e07070;">→</div>
+
+        <div style="flex:1;min-width:110px;background:#fff;border:1.5px solid #e8a0a0;border-radius:8px;padding:8px;text-align:center;">
+          <div style="font-size:18px;">😊</div>
+          <div style="font-size:11.5px;font-weight:700;color:#b23030;margin-top:3px;">认出是谁</div>
+          <div style="font-size:10px;color:#8a5a5a;margin-top:2px;">人脸对到花名册</div>
+        </div>
+        <div style="display:flex;align-items:center;color:#e07070;">→</div>
+
+        <div style="flex:1;min-width:110px;background:#fff;border:1.5px solid #e8a0a0;border-radius:8px;padding:8px;text-align:center;">
+          <div style="font-size:18px;">📏</div>
+          <div style="font-size:11.5px;font-weight:700;color:#b23030;margin-top:3px;">判定违纪类型</div>
+          <div style="font-size:10px;color:#8a5a5a;margin-top:2px;">规则引擎：按类型扣分（PRD §10.2）</div>
+        </div>
+        <div style="display:flex;align-items:center;color:#e07070;">→</div>
+
+        <div style="flex:1;min-width:130px;background:#fff3e0;border:1.5px solid #f0a04b;border-radius:8px;padding:8px;text-align:center;">
+          <div style="font-size:18px;">🧑‍🏫</div>
+          <div style="font-size:11.5px;font-weight:700;color:#b06a10;margin-top:3px;">当场警告</div>
+          <div style="font-size:10px;color:#8a6a30;margin-top:2px;">"XX，请注意纪律，本次违纪扣 X 分"</div>
+        </div>
+        <div style="display:flex;align-items:center;color:#f0a04b;">→</div>
+
+        <div style="flex:1;min-width:110px;background:#eef2ff;border:1.5px solid #5b6fd8;border-radius:8px;padding:8px;text-align:center;">
+          <div style="font-size:18px;">📝</div>
+          <div style="font-size:11.5px;font-weight:700;color:#3a4490;margin-top:3px;">记入纪律日志</div>
+          <div style="font-size:10px;color:#5a5f90;margin-top:2px;">谁、何时、什么违纪、扣几分</div>
+        </div>
+        <div style="display:flex;align-items:center;color:#5b6fd8;">→</div>
+
+        <div style="flex:1;min-width:110px;background:#eef2ff;border:1.5px solid #5b6fd8;border-radius:8px;padding:8px;text-align:center;">
+          <div style="font-size:18px;">📊</div>
+          <div style="font-size:11.5px;font-weight:700;color:#3a4490;margin-top:3px;">课后算分</div>
+          <div style="font-size:10px;color:#5a5f90;margin-top:2px;">计入该生本节课表现</div>
+        </div>
+
+      </div>
+
+      <div style="margin-top:10px;background:#fff;border:1px dashed #e8a0a0;border-radius:6px;padding:8px;font-size:11.5px;color:#8a4040;line-height:1.8;">
+        <b>按类型扣分（PRD §10.2，管理员可配）：</b>大声说话 -5、离座/走动 -3、睡觉/趴桌 -8、旷课 -20、迟到 -5、全勤 +5；警告按次数升级：第 1 次口头警告（不额外扣分）、第 2 次通知家长、第 3 次通知管理员——扣分始终按违纪类型执行，升级规则只影响话术与通知。警告语气由虚拟人物当面说出口，不是弹窗——学生能听到 AI 老师在点名批评自己。
+      </div>
+    </div>
+
+    <!-- 共用点 -->
+    <div style="background:#fff;border:1.5px solid #d8e0ec;border-radius:12px;padding:14px;margin-top:12px;">
+      <div style="font-size:14px;font-weight:700;color:#1f3a5f;margin-bottom:8px;">这两个流程都依赖的三件事</div>
+      <div style="display:flex;gap:10px;flex-wrap:wrap;font-size:12px;">
+        <div style="flex:1;min-width:200px;background:#e0f5ec;border:1px solid #7fd0b0;border-radius:8px;padding:9px;">
+          <b style="color:#0f6b48;">👁 持续视觉监测</b><br><span style="color:#3a7a60;font-size:11px;">整节课摄像头一直跑，随时检测举手/走动/睡觉/离座</span>
+        </div>
+        <div style="flex:1;min-width:200px;background:#e0f5ec;border:1px solid #7fd0b0;border-radius:8px;padding:9px;">
+          <b style="color:#0f6b48;">👤 人脸↔花名册绑定</b><br><span style="color:#3a7a60;font-size:11px;">不管是举手还是违纪，第一步都是"认出是谁"，所以人脸库必须先建好</span>
+        </div>
+        <div style="flex:1;min-width:200px;background:#e0f5ec;border:1px solid #7fd0b0;border-radius:8px;padding:9px;">
+          <b style="color:#0f6b48;">📏 规则引擎</b><br><span style="color:#3a7a60;font-size:11px;">警告几次、扣几分、怎么措辞——这些规则由管理员在后台配，不写死在代码里</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
