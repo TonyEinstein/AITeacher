@@ -1,4 +1,4 @@
-# AI Teacher 智能教学系统
+# AI Teacher 智能教学Agent系统
 
 **[English](#english) | 中文**
 
